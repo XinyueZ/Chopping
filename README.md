@@ -13,10 +13,11 @@ Example:
           |__fallback.properties(other names are ok.)
           
     **In app.properties:**
- 	app_config=https://dl.dropboxusercontent.com/s/tk28mec9h47vjlc/choppingexample.properties
+    app_config=https://dl.dropboxusercontent.com/s/tk28mec9h47vjlc/choppingexample.properties
     app_config_fallback=fallback.properties
     
-    **In fallback.properties** it should use same info that has been saved behind 'app_config'.
+    **In fallback.properties** 
+    It should use same info that has been saved behind 'app_config'.
     
     **In Java:**
 
