@@ -20,7 +20,25 @@ Example:
     It should use same info that has been saved behind 'app_config'.
     
     **In Java:**
+	App class:
+    public final class App extends Application {
 
+      @Override
+      public void onCreate() {
+          super.onCreate();
+          init();
+  
+      }
+  
+      private void init() {
+          //Init SharePefrerence.
+          Prefs.createInstance(this);
+          //Init Volley.
+          TaskHelper.init(getApplicationContext());
+      }
+    }
+    
+    Activity class:
     @Subscribe
     public void onApplicationConfigurationDownloaded(ApplicationConfigurationDownloadedEvent _e) {
 		TextView textView = (TextView) findViewById(R.id.output_tv);
@@ -30,9 +48,7 @@ Example:
 	 @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		Prefs.createInstance(getApplicationContext());
-
+		setContentView(R.layout.activity_main); 
 		String mightError = null;
 		try {
 			Prefs.getInstance().downloadApplicationConfiguration();
