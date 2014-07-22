@@ -6,16 +6,17 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
 import com.chopping.bus.BusProvider;
 import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
 import com.chopping.exceptions.InvalidAppPropertiesException;
-import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.session.AppKeyPair;
-import com.dropbox.client2.session.Session;
-import com.dropbox.client2.session.WebOAuth2Session;
+import com.chopping.net.TaskHelper;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -50,16 +51,7 @@ public class BasicPrefs {
 	 * Exception will be created if can not find APP_PROPERTIES or APP_CONFIG &
 	 * APP_CONFIG_FALLBACK can not be found in file APP_PROPERTIES.
 	 */
-	private Exception mExp;
-
-	/** DropBox backend auth needs.*/
-	private final static  String APP_KEY = "2uyohtel2bu7hyt";
-	/** DropBox backend auth needs.*/
-	private final static  String APP_SECRET = "ua6a5di8rtdlu30";
-	/** DropBox access session.*/
-	private final static Session.AccessType ACCESS_TYPE = Session.AccessType.DROPBOX;
-	/** In the class declaration section: */
-	private DropboxAPI<?> mDropBoxApi;
+	private RuntimeException mExp;
 
 
 	/** The Constant VERSION. */
@@ -141,27 +133,9 @@ public class BasicPrefs {
 		/* Read "app.properties" under resources of project.*/
 		getAppPropertiesUrl(context);
 
-		if( mExp == null) {
-			initDropBox();
-		}
 	}
 
-	/**
-	 * Init DropBox session with auth.
-	 */
-	private void initDropBox() {
-		AppKeyPair appKeyPair = new AppKeyPair(APP_KEY, APP_SECRET);
-		WebOAuth2Session was = new WebOAuth2Session(appKeyPair);
-		try {
-			String accessToken = was.retrieveWebAccessToken(appKeyPair.toString(), null);
-			String url = was.getAuthorizeURL(null, null);
-			mDropBoxApi = new DropboxAPI<WebOAuth2Session>(was);
-			DropboxAPI.Account acc = mDropBoxApi.accountInfo();
-		} catch (DropboxException e) {
-			e.printStackTrace();
-			mExp = e;
-		}
-	}
+
 
 	protected String getString(String key, String defValue) {
 		return preference.getString(key, defValue);
@@ -338,31 +312,39 @@ public class BasicPrefs {
 	}
 
 
-
-
 	/**
 	 * Download application's configuration, internal will use url that has been
 	 * loaded from app.properties. It could use fallback if the url is invalid.
-	 * 
+	 *
 	 * @throws CanNotOpenOrFindAppPropertiesException
 	 * @throws InvalidAppPropertiesException
-	 * @throws DropboxException
 	 */
-	public void downloadApplicationConfiguration() throws Exception {
+	public void downloadApplicationConfiguration() throws CanNotOpenOrFindAppPropertiesException,
+			InvalidAppPropertiesException {
 		if (mExp != null) {
 			setBoolean(APP_CAN_LIVE, false);
 			throw mExp;
 		}
-		try {
-			LL.i(":) Loaded app's config: " + getAppConfigUrl());
-			DropboxAPI.DropboxInputStream is = mDropBoxApi.getFileStream(getAppConfigUrl(), null);
-			writePrefsWithStream(is);
-		} catch (DropboxException e) {
-			LL.w(":( Can't load remote config: " + getAppConfigUrl());
-			LL.i(":) We load fallback: " + getAppConfigFallbackUrl());
-			writePrefsWithStream(mContext.getClassLoader().getResourceAsStream(
-					getAppConfigFallbackUrl()));
-		}
+		/*
+		 * Request app's configuration.
+		 */
+		StringRequest request = new StringRequest(Request.Method.GET, getAppConfigUrl(),
+				new Response.Listener<String>() {
+					@Override
+					public void onResponse(String response) {
+						LL.i(":) Loaded app's config: " + getAppConfigUrl());
+						writePrefsWithStream(new ByteArrayInputStream(response.getBytes()));
+					}
+				}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				LL.w(":( Can't load remote config: " + getAppConfigUrl());
+				LL.i(":) We load fallback: " + getAppConfigFallbackUrl());
+				writePrefsWithStream(mContext.getClassLoader().getResourceAsStream(
+						getAppConfigFallbackUrl()));
+			}
+		});
+		TaskHelper.getRequestQueue().add(request);
 	}
 
 	/**

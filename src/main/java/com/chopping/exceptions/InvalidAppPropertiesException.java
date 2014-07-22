@@ -9,7 +9,7 @@ package com.chopping.exceptions;
  *
  * These two properties must be included in.
  */
-public final class InvalidAppPropertiesException extends Exception{
+public final class InvalidAppPropertiesException extends RuntimeException{
 	@Override
 	public String getMessage() {
 		return "app.properties doesn't have standard properties like\napp_config\napp_config_fallback\netc.";
