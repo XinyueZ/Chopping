@@ -5,7 +5,7 @@ Config App with a remote link. When network doesn't work good, the fallback will
 
 Based on Google Volley, Otto-Bus.
 
-Example:
+Example(From https://github.com/XinyueZ/ExampleChopping):
 	
     main
 	|____java
