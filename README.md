@@ -1,7 +1,9 @@
 Chopping
 ========
 
-Config App with a remote link. When network doesn't work good, the fallback will work for the App.
+Config App with a remote link. When network doesn't work good, the fallback will work for the App. 
+
+Based on Google Volley, Otto-Bus.
 
 Example:
 	
