@@ -5,6 +5,23 @@ Config App with a remote link. When network doesn't work good, the fallback will
 
 Based on Google Volley, Otto-Bus.
 
+Integrate into projects created by Android Studio:
+
+1. git submodule add https://github.com/XinyueZ/Chopping.git submodules/ChoppingBootstrap
+2. To get main code of Chopping run: git submodule update -i
+3. cd submodules/ChoppingBootstrap
+4. To get updated Google Volley: git submodule update -i
+5. Switch To top level of project and edit settings.gradle, add:
+
+	include ':app', ':ChoppingBootstrap', ':volley_cz'
+	project(':ChoppingBootstrap').projectDir = new File('submodules/ChoppingBootstrap')
+	project(':volley_cz').projectDir = new File('submodules/ChoppingBootstrap/submodules/volley_cz')
+ 
+6. Switch to app/build.gradle. Add or edit dependencies {} like:
+
+    compile project(':ChoppingBootstrap')
+    compile project(':volley_cz')
+
 Example(From https://github.com/XinyueZ/ExampleChopping):
 	
     main
