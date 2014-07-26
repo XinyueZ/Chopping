@@ -1,11 +1,5 @@
 package com.chopping;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.text.TextUtils;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,6 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 /**
  * Basic class that provides Preference storage and make it easy to store data.
@@ -111,7 +112,7 @@ public class BasicPrefs {
 	 */
 	protected BasicPrefs(Context context) {
 		mContext = context;
-		preference = context.getSharedPreferences(getClass().getPackage().toString(), Context.MODE_PRIVATE);
+		preference = PreferenceManager.getDefaultSharedPreferences(context);
 
 		try {
 			PackageManager manager = context.getPackageManager();
