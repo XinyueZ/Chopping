@@ -22,7 +22,7 @@ Integrate into projects created by Android Studio:
     compile project(':ChoppingBootstrap')
     compile project(':volley_cz')
 
-Example(From https://github.com/XinyueZ/ExampleChopping):
+Example loading App's configuration(From https://github.com/XinyueZ/ExampleChopping):
 	
     main
 	|____java
