@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="StickyText">
+		<item name="android:textColor">#cccccc</item>
+		<item name="android:textSize">12sp</item>
+	</style>
+
+	<style name="StickyLayout">
+		<item name="android:layout_marginLeft">5dp</item>
+		<item name="android:layout_marginRight">5dp</item>
+		<item name="android:layout_marginTop">0dp</item>
+		<item name="android:background">@drawable/bg_sticky</item>
+	</style>
+</resources>

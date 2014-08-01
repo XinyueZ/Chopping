@@ -1,8 +1,5 @@
 package com.chopping.net;
 
-import android.content.Context;
-import android.util.Log;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -17,11 +14,16 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
 
+import android.content.Context;
+import android.util.Log;
+
 
 /**
  * Network commentator based on Volley.
+ *
  * @param <T>
- * @author  Xinyue Zhao
+ *
+ * @author Xinyue Zhao
  */
 public final class GsonRequestTask<T> extends Request<T> {
 
@@ -56,12 +58,14 @@ public final class GsonRequestTask<T> extends Request<T> {
 
 	private static void logError(VolleyError _error) {
 		NetworkResponse response = _error.networkResponse;
-		Map<String, String> headers = response.headers;
-		if (headers != null && headers.size() > 0) {
-			Set<String> keys = headers.keySet();
-			Log.e(TAG, new StringBuilder().append("Status ").append(response.statusCode).toString());
-			for (String key : keys) {
-				Log.e(TAG, key + " ==> "+ headers.get(key));
+		if (response != null) {
+			Map<String, String> headers = response.headers;
+			if (headers != null && headers.size() > 0) {
+				Set<String> keys = headers.keySet();
+				Log.e(TAG, new StringBuilder().append("Status ").append(response.statusCode).toString());
+				for (String key : keys) {
+					Log.e(TAG, key + " ==> " + headers.get(key));
+				}
 			}
 		}
 	}
@@ -87,7 +91,7 @@ public final class GsonRequestTask<T> extends Request<T> {
 	}
 
 
-	public void execute() { 
+	public void execute() {
 		RequestQueue queue = TaskHelper.getRequestQueue();
 		queue.add(this);
 	}

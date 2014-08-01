@@ -1,4 +1,4 @@
-package com.chopping;
+package com.chopping.application;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -105,6 +105,8 @@ public class BasicPrefs {
 		}
 		return url;
 	}
+
+
 
 	/**
 	 * Constructor of BasicPrefs

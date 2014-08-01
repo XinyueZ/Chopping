@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<LinearLayout
+			android:id="@id/err_sticky_container"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:visibility="gone"
+			android:background="@android:color/transparent">
+
+		<RelativeLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				style="@style/StickyLayout">
+
+			<TextView
+					android:id="@id/err_tv"
+					style="@style/StickyText"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_horizontal" />
+
+			<LinearLayout
+					android:layout_marginTop="5dp"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignLeft="@id/err_tv"
+					android:layout_alignRight="@id/err_tv"
+					android:layout_margin="5dp"
+					android:layout_below="@id/err_tv"
+					android:orientation="horizontal">
+
+				<ImageButton
+						android:id="@id/open_setting_btn"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginRight="5dp"
+						android:background="@android:color/transparent"
+						android:contentDescription="@string/app_name"
+						android:src="@drawable/btn_settings"
+						android:visibility="gone" />
+
+				<TextView
+						android:id="@id/err_more_tv"
+						style="@style/StickyText"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:visibility="gone" />
+			</LinearLayout>
+		</RelativeLayout>
+
+	</LinearLayout>
+</merge>
