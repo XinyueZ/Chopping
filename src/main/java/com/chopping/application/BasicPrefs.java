@@ -423,9 +423,9 @@ public class BasicPrefs {
 		}
 		long lastUpdate = getLong(LAST_UPDATE, -1);
 		boolean loadingConfig =
-						lastUpdate < 0 ||
-						System.currentTimeMillis() - lastUpdate >= getLong(UPDATE_RATE, SIX_HOURS) ||
-						mNewAppVersion;
+						lastUpdate < 0 || //Fist install, no last update.
+						System.currentTimeMillis() - lastUpdate >= getLong(UPDATE_RATE, SIX_HOURS) || //Long time use and try to load newly.
+						mNewAppVersion; //App has been updated.
 		if (loadingConfig) {
 			LL.i("Loading App's configuration.");
 			/*
