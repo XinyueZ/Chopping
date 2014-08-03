@@ -35,22 +35,20 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 
 	@Subscribe
 	public void onVolleyError(VolleyError e) {
-		if (e.networkResponse != null) {
-			int statusCode = e.networkResponse.statusCode;
-			LL.d(String.format("Error-Handling find abnormal status: %d", statusCode));
-			if (statusCode != HttpStatus.SC_OK) {
-				Context context = mContextWeakReference.get();
-				if (context != null) {
+		Context context = mContextWeakReference.get();
+		if (context != null) {
+			if (e.networkResponse != null) {
+				int statusCode = e.networkResponse.statusCode;
+				LL.d(String.format("Error-Handling find abnormal status: %d", statusCode));
+				if (statusCode != HttpStatus.SC_OK) {
 					openStickyBanner(context, NetworkUtils.isAirplaneModeOn(context));
+
 				}
-			}
-		} else {
-			Context context = mContextWeakReference.get();
-			if (context != null) {
+			} else {
 				openStickyBanner(context, NetworkUtils.isAirplaneModeOn(context));
 			}
+			setText(e.networkResponse);
 		}
-		setText(e.networkResponse);
 	}
 
 	//------------------------------------------------
