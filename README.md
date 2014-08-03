@@ -1,7 +1,7 @@
 Chopping
 ========
 
-Config App with a remote link. When network doesn't work good, the fallback will work for the App. 
+Working for config App with a remote link. When network doesn't work good, the fallback will work for the App. Applcation will load configuration according to the "update_rate" which is edited in app.properties .
 
 Based on Google Volley, Otto-Bus.
 
@@ -34,6 +34,7 @@ Example loading App's configuration(From https://github.com/XinyueZ/ExampleChopp
     **In app.properties:**
     app_config=https://dl.dropboxusercontent.com/s/tk28mec9h47vjlc/choppingexample.properties
     app_config_fallback=fallback.properties
+    update_rate=5
     
     **In fallback.properties** 
     It should use same info that has been saved behind 'app_config'.
