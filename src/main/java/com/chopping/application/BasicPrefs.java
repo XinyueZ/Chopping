@@ -407,10 +407,10 @@ public class BasicPrefs {
 	 * Download application's configuration, internal will use url that has been loaded from app.properties. It could
 	 * use fallback if the url is invalid.
 	 *
-	 * @throws {@link
-	 * 		com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException}. If can not find  "app.properties" .
-	 * @throws {@link
-	 * 		com.chopping.exceptions.InvalidAppPropertiesException}.  If can not find some mandatory properties.
+	 * @throws CanNotOpenOrFindAppPropertiesException
+	 * 		If can not find  "app.properties" .
+	 * @throws InvalidAppPropertiesException
+	 * 		If can not find some mandatory properties.
 	 */
 	public void downloadApplicationConfiguration() throws CanNotOpenOrFindAppPropertiesException,
 	                                                      InvalidAppPropertiesException {
@@ -480,7 +480,29 @@ public class BasicPrefs {
 			 */
 			for (String name : names) {
 				valueStr = prop.getProperty(name);
-				setString(name, valueStr);
+				LL.d(String.format("%s=%s", name, valueStr));
+				if (TextUtils.isDigitsOnly(valueStr)) {
+					try {
+						int intValue = Integer.valueOf(valueStr);
+						setInt(name, intValue);
+					} catch (NumberFormatException eL) {
+						long longValue = Long.valueOf(valueStr);
+						setLong(name, longValue);
+					}
+				} else {
+					try {
+						float floatValue = Float.parseFloat(valueStr);
+						setFloat(name, floatValue);
+					} catch (Exception eF) {
+						if (TextUtils.equals(valueStr.toLowerCase(), "true") ||
+								TextUtils.equals(valueStr.toLowerCase(), "false")) {
+							setBoolean(name, Boolean.parseBoolean(valueStr));
+						} else {
+							/*Have no choice, then all in to string.*/
+							setString(name, valueStr);
+						}
+					}
+				}
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
