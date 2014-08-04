@@ -231,14 +231,11 @@ public class BasicPrefs {
 				}
 				/*Get update-rate. We don't save it first in preference until App's configurations have been loaded.*/
 				mUpdateRate = prop.getProperty(UPDATE_RATE);
-				if(TextUtils.isEmpty(mUpdateRate)) {
-					LL.i("Properly loading after 6 hours." );
-				} else {
-					if(!TextUtils.isDigitsOnly(mUpdateRate)) {
-						mUpdateRate = "6"; //Six hours is default.
-					}
-					LL.i(String.format("Properly loading after %s hours.", mUpdateRate));
+				if (TextUtils.isEmpty(mUpdateRate) || //Do not provide, prompt to use 6 hours.
+						!TextUtils.isDigitsOnly(mUpdateRate)) {//Invalid format of update-rate.
+					mUpdateRate = "6";
 				}
+				LL.i(String.format("Properly loading after %s hours.", mUpdateRate));
 			} else {
 				mExp = new CanNotOpenOrFindAppPropertiesException();
 			}
@@ -423,8 +420,9 @@ public class BasicPrefs {
 		}
 		long lastUpdate = getLong(LAST_UPDATE, -1);
 		boolean loadingConfig =
-						lastUpdate < 0 || //Fist install, no last update.
-						System.currentTimeMillis() - lastUpdate >= getLong(UPDATE_RATE, SIX_HOURS) || //Long time use and try to load newly.
+				lastUpdate < 0 || //Fist install, no last update.
+						System.currentTimeMillis() - lastUpdate >= getLong(UPDATE_RATE, SIX_HOURS) ||
+						//Long time use and try to load newly.
 						mNewAppVersion; //App has been updated.
 		if (loadingConfig) {
 			LL.i("Loading App's configuration.");
@@ -461,7 +459,7 @@ public class BasicPrefs {
 		setLong(UPDATE_RATE, !TextUtils.isEmpty(mUpdateRate) ? Integer.valueOf(mUpdateRate) *
 				ONE_HOUR :
 				SIX_HOURS);
-		LL.i(String.format("Loading after %d hours.", getLong(UPDATE_RATE, -1) ));
+		LL.i(String.format("Loading after %d hours.", getLong(UPDATE_RATE, -1)));
 	}
 
 	/**
