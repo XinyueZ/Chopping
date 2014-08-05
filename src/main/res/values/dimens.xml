@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="err_sticky_layout_outer_margin">10dp</dimen>
+	<dimen name="err_sticky_general_margin_padding">5dp</dimen>
+	<dimen name="err_sticky_general_text_sz">13sp</dimen>
+</resources>

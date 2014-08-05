@@ -2,14 +2,33 @@
 <resources>
 
 	<style name="StickyText">
-		<item name="android:textColor">#cccccc</item>
-		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">@color/err_sticky_text_clr</item>
+		<item name="android:textSize">@dimen/err_sticky_general_text_sz</item>
+		<item name="android:layout_gravity">center_vertical</item>
 	</style>
 
-	<style name="StickyLayout">
-		<item name="android:layout_marginLeft">5dp</item>
-		<item name="android:layout_marginRight">5dp</item>
-		<item name="android:layout_marginTop">0dp</item>
-		<item name="android:background">@drawable/bg_sticky</item>
+	<style name="Sticky">
+		<item name="android:layout_marginLeft">@dimen/err_sticky_layout_outer_margin</item>
+		<item name="android:layout_marginRight">@dimen/err_sticky_layout_outer_margin</item>
+		<item name="android:background">@drawable/bg_sticky_default</item>
+		<item name="android:visibility">gone</item>
+		<item name="android:orientation">vertical</item>
+		<item name="android:paddingBottom">@dimen/err_sticky_general_margin_padding</item>
+	</style>
+
+	<style name="Sticky.AirplaneMode">
+		<item name="android:layout_marginTop">@dimen/err_sticky_general_margin_padding</item>
+		<item name="android:layout_marginLeft">@dimen/err_sticky_general_margin_padding</item>
+		<item name="android:layout_marginRight">@dimen/err_sticky_general_margin_padding</item>
+		<item name="android:orientation">horizontal</item>
+		<item name="android:visibility">visible</item>
+	</style>
+
+	<style name="Sticky.Setting">
+		<item name="android:layout_marginRight">@dimen/err_sticky_general_margin_padding</item>
+		<item name="android:background">@android:color/transparent</item>
+		<item name="android:contentDescription">@string/app_name</item>
+		<item name="android:src">@drawable/btn_settings_airplane_mode</item>
+		<item name="android:visibility">visible</item>
 	</style>
 </resources>

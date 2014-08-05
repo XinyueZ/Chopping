@@ -118,9 +118,7 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 		View sticky = mStickyBannerRef.get();
 		if (sticky != null) {
 			sticky.setVisibility(View.VISIBLE);
-			sticky.findViewById(R.id.open_setting_btn).setVisibility(
-					isAirplaneMode ? View.VISIBLE : View.GONE);
-			sticky.findViewById(R.id.err_more_tv).setVisibility(
+			sticky.findViewById(R.id.airplane_mode_ll).setVisibility(
 					isAirplaneMode ? View.VISIBLE : View.GONE);
 		}
 	}
