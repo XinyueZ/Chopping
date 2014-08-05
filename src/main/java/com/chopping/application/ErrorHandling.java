@@ -16,7 +16,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 /**
@@ -40,7 +40,7 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	/**
 	 * Animation for sticky.
 	 */
-	private AnimationSet mAnim;
+	private AnimationSet mAnimSet;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -103,7 +103,7 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 //		mIntentFilterConnectivityReceiver = null;
 //		mConnectivityReceiver = null;
 		stopAnim();
-		mAnim = null;
+		mAnimSet = null;
 	}
 
 
@@ -127,8 +127,8 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	 * Force to stop animation of sticky.
 	 */
 	private void stopAnim() {
-		if (mAnim != null) {
-			mAnim.cancel();
+		if (mAnimSet != null) {
+			mAnimSet.cancel();
 		}
 	}
 
@@ -157,31 +157,12 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	 * Open the sticky with some animations.
 	 */
 	private void openStickyBanner(Context context, boolean isAirplane) {
-		int duration1 = 700;
-		int duration2 = 500;
-		if (isAirplane) {
-			duration1 *= 10;
-			duration2 *= 10;
-		}
-		try {
-			stopAnim();
-			mAnim = new AnimationSet(true);
-			TranslateAnimation a = new TranslateAnimation(0, 0, -10, 0);
-			a.setStartOffset(200);
-			a.setDuration(duration1);
-			mAnim.addAnimation(a);
-			a = new TranslateAnimation(0, 0, 5, 0);
-			a.setStartOffset(3500);
-			a.setDuration(duration2);
-			mAnim.addAnimation(a);
-			mAnim.setAnimationListener(this);
-			showStickyBanner(isAirplane);
-			View sticky = mStickyBannerRef.get();
-			if (sticky != null) {
-				sticky.startAnimation(mAnim);
-			}
-		} catch (RuntimeException _ex) {
-			// Thrown if the App was closed during animation
+		mAnimSet = (AnimationSet) AnimationUtils.loadAnimation(context, R.anim.slide_in_and_out);
+		mAnimSet.setAnimationListener(this);
+		showStickyBanner(isAirplane);
+		View sticky = mStickyBannerRef.get();
+		if (sticky != null) {
+			sticky.startAnimation(mAnimSet);
 		}
 	}
 
