@@ -20,14 +20,27 @@ import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 /**
- * Error handling for components like Activity, Fragment, Service etc.
+ * Error handling for components like {@link android.support.v4.app.Fragment}, {@link android.app.Activity}, {@link
+ * android.app.Service} etc.
+ * <p/>
+ * This class supports only {@link android.support.v4.app.Fragment}, also {@link android.app.Activity} or {@link
+ * android.support.v7.app.ActionBarActivity}.
  *
  * @author Xinyue Zhao
  */
 public final class ErrorHandling implements Animation.AnimationListener, View.OnClickListener {
+	/**
+	 * View ref to the sticky.
+	 */
 	private WeakReference<View> mStickyBannerRef;
-	private AnimationSet mAnim;
+	/**
+	 * Context that holding {@link ErrorHandling}.
+	 */
 	private WeakReference<Context> mContextWeakReference;
+	/**
+	 * Animation for sticky.
+	 */
+	private AnimationSet mAnim;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -37,26 +50,27 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	public void onVolleyError(VolleyError e) {
 		Context context = mContextWeakReference.get();
 		if (context != null) {
+			boolean isAirplaneModeOn = NetworkUtils.isAirplaneModeOn(context);
 			if (e.networkResponse != null) {
 				int statusCode = e.networkResponse.statusCode;
 				LL.d(String.format("Error-Handling find abnormal status: %d", statusCode));
 				if (statusCode != HttpStatus.SC_OK) {
-					openStickyBanner(context, NetworkUtils.isAirplaneModeOn(context));
-
+					openStickyBanner(context, isAirplaneModeOn);
 				}
 			} else {
-				openStickyBanner(context, NetworkUtils.isAirplaneModeOn(context));
+				openStickyBanner(context, isAirplaneModeOn);
 			}
-			setText(e.networkResponse);
+			setText(e.networkResponse, isAirplaneModeOn);
 		}
 	}
 
 	//------------------------------------------------
 
 	/**
-	 * onCreate Called according to the life-cycle of component(Fragment, Activity, Service etc.).
+	 * onCreate Called according to the life-cycle of component({@link android.support.v4.app.Fragment}, {@link
+	 * android.app.Activity}, {@link android.app.Service} etc.).
 	 *
-	 * @param fragment
+	 * @param android.support.v4.app.Fragment
 	 * 		A fragment if error is handled for fragment.
 	 */
 	public void onCreate(Fragment fragment) {
@@ -66,7 +80,7 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	/**
 	 * onCreate Called according to the life-cycle of component(Fragment, Activity, Service etc.).
 	 *
-	 * @param activity
+	 * @param Activity
 	 * 		An activity if error is handled for activity.
 	 */
 	public void onCreate(Activity activity) {
@@ -78,7 +92,8 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 
 
 	/**
-	 * onDestroy Called according to the life-cycle of component(Fragment, Activity, Service etc.).
+	 * onDestroy Called according to the life-cycle of component({@link android.support.v4.app.Fragment}, {@link
+	 * android.app.Activity}, {@link android.app.Service} etc.).
 	 * <p/>
 	 * For fragment calls it in onDestroyView().
 	 */
@@ -191,16 +206,26 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	 *
 	 * @param _networkResponse
 	 * 		A response from volley, it might be NULL if internet has been disconnected.
+	 * @param _isAirplaneModeOn
+	 * 		True if the airplane has been on, and a "setting button" can open system setting to shit-down it.
 	 */
-	private void setText(NetworkResponse _networkResponse) {
+	private void setText(NetworkResponse _networkResponse, boolean _isAirplaneModeOn) {
 		View sticky = mStickyBannerRef.get();
 		if (sticky != null) {
 			TextView errTv = (TextView) sticky.findViewById(R.id.err_tv);
 			TextView errMoreTv = (TextView) sticky.findViewById(R.id.err_more_tv);
-			if (_networkResponse != null) {
-
+			if (_isAirplaneModeOn) {
+				/*Airplane-mode ignores all other network-errors.*/
+				errTv.setText(R.string.meta_airplane_mode);
+				errMoreTv.setText(R.string.meta_reset_airplane_mode);
 			} else {
-
+				/*Some network-errors.*/
+				if (_networkResponse != null) {
+					/*Online errors.*/
+				} else {
+					/*Offline error, no object-ref to NetworkResponse.*/
+					errTv.setText(R.string.meta_data_old_offline);
+				}
 			}
 		}
 	}
