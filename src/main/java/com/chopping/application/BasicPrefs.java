@@ -1,5 +1,6 @@
 package com.chopping.application;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -406,6 +407,8 @@ public class BasicPrefs {
 	/**
 	 * Download application's configuration, internal will use url that has been loaded from app.properties. It could
 	 * use fallback if the url is invalid.
+	 * <p/>
+	 * Call this at {@code onResume} .
 	 *
 	 * @throws CanNotOpenOrFindAppPropertiesException
 	 * 		If can not find  "app.properties" .
@@ -448,7 +451,14 @@ public class BasicPrefs {
 							saveUpdateRate();
 						}
 					});
+			request.setRetryPolicy(new DefaultRetryPolicy(
+					10 * 1000,
+					DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+					DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 			TaskHelper.getRequestQueue().add(request);
+		} else {
+			/* Finish loading configuration directly. */
+			BusProvider.getBus().post(new ApplicationConfigurationDownloadedEvent());
 		}
 	}
 
