@@ -3,7 +3,7 @@ package com.chopping.application;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.chopping.R;
-import com.chopping.net.NetworkUtils;
+import com.chopping.utils.NetworkUtils;
 import com.squareup.otto.Subscribe;
 
 import org.apache.http.HttpStatus;

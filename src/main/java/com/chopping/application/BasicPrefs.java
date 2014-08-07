@@ -10,6 +10,8 @@ import com.chopping.bus.BusProvider;
 import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
 import com.chopping.exceptions.InvalidAppPropertiesException;
 import com.chopping.net.TaskHelper;
+import com.chopping.utils.Consts;
+import com.chopping.utils.DeviceUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,7 +25,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 
 /**
  * Basic class that provides Preference storage and make it easy to store data globally. We call {@link
@@ -42,8 +43,6 @@ public class BasicPrefs {
 	//----------------------------------------------------------
 	// Description: Constants
 	//----------------------------------------------------------
-	private static final String UNKNOWN = "UNKNOWN";
-	private static final String ANDROID = "ANDROID";
 	private static final long ONE_HOUR = 3600000;
 	private static final long SIX_HOURS = 21600000;
 	/**
@@ -158,14 +157,14 @@ public class BasicPrefs {
 			}
 			setInt(APP_CODE, info.versionCode);
 			if (TextUtils.isEmpty(android.os.Build.MODEL)) {
-				setString(DEVICE_MODEL, UNKNOWN);
+				setString(DEVICE_MODEL, Consts.UNKNOWN.name());
 			} else {
 				setString(DEVICE_MODEL, android.os.Build.MODEL);
 			}
-			setString(OS_NAME, ANDROID);
+			setString(OS_NAME, Consts.ANDROID.name());
 			setString(OS_VERSION, android.os.Build.VERSION.RELEASE);
 			setInt(OS_API_LEVEL, android.os.Build.VERSION.SDK_INT);
-			setString(SCREEN_DPI, getDeviceResolution());
+			setString(SCREEN_DPI, DeviceUtils.getDeviceResolution(context).name());
 		} catch (PackageManager.NameNotFoundException _e) {
 			_e.printStackTrace();
 		} catch (Exception _e) {
@@ -177,33 +176,6 @@ public class BasicPrefs {
 
 	}
 
-
-	/**
-	 * Get resolution of screen which kind of dpi will be detected.
-	 *
-	 * @return DPI type in string.
-	 */
-	private String getDeviceResolution() {
-		int density = mContext.getResources().getDisplayMetrics().densityDpi;
-		switch (density) {
-			case DisplayMetrics.DENSITY_MEDIUM:
-				return "mdpi";
-			case DisplayMetrics.DENSITY_HIGH:
-				return "hdpi";
-			case DisplayMetrics.DENSITY_LOW:
-				return "ldpi";
-			case DisplayMetrics.DENSITY_XHIGH:
-				return "xhdpi";
-			case DisplayMetrics.DENSITY_TV:
-				return "tv";
-			case DisplayMetrics.DENSITY_XXHIGH:
-				return "xxhdpi";
-			case DisplayMetrics.DENSITY_XXXHIGH:
-				return "xxxhdpi";
-			default:
-				return UNKNOWN;
-		}
-	}
 
 	/**
 	 * Get the url to the application's configuration.
@@ -359,20 +331,20 @@ public class BasicPrefs {
 	/**
 	 * Get device model.
 	 *
-	 * @return the device model, it might be BasicPrefs.UNKNOWN.
+	 * @return the device model, it might be {@code Consts.UNKNOWN.name()}.
 	 */
 	public String getDeviceModel() {
-		return getString(DEVICE_MODEL, UNKNOWN);
+		return getString(DEVICE_MODEL, Consts.UNKNOWN.name());
 	}
 
 
 	/**
 	 * Get OS name.
 	 *
-	 * @return the os name, it must be BasicPrefs.ANDROID.
+	 * @return the os name, it must be {@code Consts.ANDROID.name()}.
 	 */
 	public String getOsName() {
-		return getString(OS_NAME, ANDROID);
+		return getString(OS_NAME, Consts.ANDROID.name());
 	}
 
 
@@ -397,7 +369,7 @@ public class BasicPrefs {
 	/**
 	 * Get screen resolution(DPI).
 	 *
-	 * @return DPI in string. <p>ldpi, mdpi, hdpi,xhdpi,xxhdpi, tv</p>, otherwise BasicPrefs.UNKNOWN.
+	 * @return DPI in string. <p>ldpi, mdpi, hdpi,xhdpi,xxhdpi, tv</p>, otherwise {@code Consts.UNKNOWN.name()}.
 	 */
 	public String getDeviceDPI() {
 		return getString(SCREEN_DPI, null);
