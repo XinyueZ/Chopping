@@ -490,7 +490,7 @@ public class BasicPrefs {
 			 */
 			for (String name : names) {
 				valueStr = prop.getProperty(name);
-				LL.d(String.format("%s=%s", name, valueStr));
+//				LL.d(String.format("%s=%s", name, valueStr));
 				if (TextUtils.isDigitsOnly(valueStr)) {
 					try {
 						int intValue = Integer.valueOf(valueStr);

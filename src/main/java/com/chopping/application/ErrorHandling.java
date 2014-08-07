@@ -70,8 +70,8 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	 * onCreate Called according to the life-cycle of component({@link android.support.v4.app.Fragment}, {@link
 	 * android.app.Activity}, {@link android.app.Service} etc.).
 	 *
-	 * @param android.support.v4.app.Fragment
-	 * 		A fragment if error is handled for fragment.
+	 * @param fragment
+	 * 		A {@link android.support.v4.app.Fragment} if error is handled for fragment.
 	 */
 	public void onCreate(Fragment fragment) {
 		onCreate(fragment.getActivity());
@@ -80,8 +80,8 @@ public final class ErrorHandling implements Animation.AnimationListener, View.On
 	/**
 	 * onCreate Called according to the life-cycle of component(Fragment, Activity, Service etc.).
 	 *
-	 * @param Activity
-	 * 		An activity if error is handled for activity.
+	 * @param activity
+	 * 		An {@link android.app.Activity} if error is handled for activity.
 	 */
 	public void onCreate(Activity activity) {
 		mContextWeakReference = new WeakReference<Context>(activity);
