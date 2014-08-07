@@ -133,7 +133,7 @@ public class BasicPrefs {
 	 * Constructor of {@link com.chopping.application.BasicPrefs}.
 	 *
 	 * @param context
-	 * 		A context object.
+	 * 		{@link android.content.Context}
 	 */
 	protected BasicPrefs(Context context) {
 		mContext = context;
@@ -181,9 +181,9 @@ public class BasicPrefs {
 	 * Get the url to the application's configuration.
 	 *
 	 * @param context
-	 * 		A context object.
+	 * 		A {@link android.content.Context} object.
 	 *
-	 * @return The url to the App's config.
+	 * @return The url in {@link java.lang.String} to the App's config.
 	 */
 	private String getAppPropertiesUrl(Context context) {
 		Properties prop = new Properties();
@@ -331,7 +331,7 @@ public class BasicPrefs {
 	/**
 	 * Get device model.
 	 *
-	 * @return the device model, it might be {@code Consts.UNKNOWN.name()}.
+	 * @return Device model in {@link java.lang.String}, it might return {@code Consts.UNKNOWN.name()}.
 	 */
 	public String getDeviceModel() {
 		return getString(DEVICE_MODEL, Consts.UNKNOWN.name());
@@ -341,20 +341,20 @@ public class BasicPrefs {
 	/**
 	 * Get OS name.
 	 *
-	 * @return the os name, it must be {@code Consts.ANDROID.name()}.
+	 * @return OS name defined in {@link com.chopping.utils.Consts}, it must return {@code Consts.ANDROID}.
 	 */
-	public String getOsName() {
-		return getString(OS_NAME, Consts.ANDROID.name());
+	public Consts getOsName() {
+		return Consts.valueOf(getString(OS_NAME, Consts.ANDROID.name()));
 	}
 
 
 	/**
 	 * Get OS releases' version.
 	 *
-	 * @return the os version
+	 * @return OS version in {@link java.lang.String}.
 	 */
 	public String getOsVersion() {
-		return getString(OS_VERSION, null);
+		return getString(OS_VERSION, android.os.Build.VERSION.RELEASE);
 	}
 
 	/**
@@ -363,16 +363,16 @@ public class BasicPrefs {
 	 * @return API Level in int.
 	 */
 	public int getOsApiLevel() {
-		return getInt(OS_API_LEVEL, -1);
+		return getInt(OS_API_LEVEL, android.os.Build.VERSION.SDK_INT);
 	}
 
 	/**
 	 * Get screen resolution(DPI).
 	 *
-	 * @return DPI in string. <p>ldpi, mdpi, hdpi,xhdpi,xxhdpi, tv</p>, otherwise {@code Consts.UNKNOWN.name()}.
+	 * @return Screen's dpi which defined in {@link com.chopping.utils.Consts}, it might return {@code Consts.UNKNOWN)}.
 	 */
-	public String getDeviceDPI() {
-		return getString(SCREEN_DPI, null);
+	public Consts getDeviceDPI() {
+		return Consts.valueOf(getString(SCREEN_DPI, Consts.UNKNOWN.name()));
 	}
 
 
@@ -380,7 +380,8 @@ public class BasicPrefs {
 	 * Download application's configuration, internal will use url that has been loaded from app.properties. It could
 	 * use fallback if the url is invalid.
 	 * <p/>
-	 * Call this at {@code onResume} .
+	 * Call this at {@code onResume()} of {@link android.app.Activity} or {@link android.support.v4.app.Fragment} for
+	 * each visible cases when App be brought to front.
 	 *
 	 * @throws CanNotOpenOrFindAppPropertiesException
 	 * 		If can not find  "app.properties" .
@@ -446,10 +447,10 @@ public class BasicPrefs {
 
 	/**
 	 * Read .properties of App's configuration in stream and write into preference. Finally send event to info front.
-	 * Recode saving time into preference.
+	 * Recode saving time into {@link android.content.SharedPreferences}.
 	 *
 	 * @param input
-	 * 		An input-stream.
+	 * 		{@link java.io.InputStream} for loaded .properties.
 	 */
 	private void writePrefsWithStream(InputStream input) {
 		Properties prop = new Properties();
