@@ -28,13 +28,13 @@ import android.widget.TextView;
  *
  * @author Xinyue Zhao
  */
-public final class ErrorHandling implements Animation.AnimationListener, View.OnClickListener {
+public final class ErrorHandler implements Animation.AnimationListener, View.OnClickListener {
 	/**
 	 * View ref to the sticky.
 	 */
 	private WeakReference<View> mStickyBannerRef;
 	/**
-	 * Context that holding {@link ErrorHandling}.
+	 * Context that holding {@link ErrorHandler}.
 	 */
 	private WeakReference<Context> mContextWeakReference;
 	/**
