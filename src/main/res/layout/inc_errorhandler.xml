@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			style="@style/ErrorView">
+
+		<TextView
+				android:id="@id/err_msg_tv"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				style="@style/ErrorViewTextView"
+				android:text="@string/cd_airplane_mode_setting"
+				android:layout_centerInParent="true" />
+
+		<Button
+				android:id="@+id/err_retry_btn"
+				style="@style/ErrorViewText"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_below="@id/err_msg_tv"
+				android:text="@string/btn_retry" />
+	</RelativeLayout>
+</merge>

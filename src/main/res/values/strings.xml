@@ -11,6 +11,11 @@
 	<string name="meta_airplane_mode">The content of this page is out of date because the flight mode is active.</string>
 	<string name="meta_reset_airplane_mode">Tapping and flight mode settings directly.</string>
 
+	<!--Error-handling UI-->
+	<string name="btn_retry">Retry</string>
+
 	<!--Content-description-->
 	<string name="cd_airplane_mode_setting">Open flight mode settings.</string>
+
+
 </resources>

@@ -2,7 +2,7 @@ package com.chopping.activities;
 
 import com.chopping.R;
 import com.chopping.application.BasicPrefs;
-import com.chopping.application.ErrorHandling;
+import com.chopping.application.ErrorHandler;
 import com.chopping.bus.BusProvider;
 import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
 import com.chopping.exceptions.InvalidAppPropertiesException;
@@ -18,17 +18,17 @@ import android.widget.FrameLayout;
  */
 public abstract class BaseActivity extends ActionBarActivity {
 	/**
-	 * Basic layout that contains a error-handling(a sticky).
+	 * Basic layout that contains an error-handling(a sticky).
 	 */
 	private static final int LAYOUT_BASE = R.layout.activity_base;
 	/**
 	 * A logical that contains controlling over all network-errors.
 	 */
-	private final ErrorHandling mErrorHandling = new ErrorHandling();
+	private final ErrorHandler mErrorHandler = new ErrorHandler();
 
 	@Override
 	protected void onResume() {
-		BusProvider.getBus().register(mErrorHandling);
+		BusProvider.getBus().register(mErrorHandler);
 		BusProvider.getBus().register(this);
 		super.onResume();
 
@@ -54,14 +54,14 @@ public abstract class BaseActivity extends ActionBarActivity {
 	@Override
 	protected void onPause() {
 		BusProvider.getBus().unregister(this);
-		BusProvider.getBus().unregister(mErrorHandling);
+		BusProvider.getBus().unregister(mErrorHandler);
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mErrorHandling.onDestroy();
+		mErrorHandler.onDestroy();
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 				new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 						ViewGroup.LayoutParams.MATCH_PARENT));
 
-		mErrorHandling.onCreate(this);
+		mErrorHandler.onCreate(this, null);
 	}
 
 	/**

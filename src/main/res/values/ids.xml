@@ -4,4 +4,6 @@
 	<item type="id" name="err_tv" />
 	<item type="id" name="err_more_tv" />
 	<item type="id" name="open_setting_btn" />
+	<item type="id" name="err_msg_tv" />
+	<item type="id" name="err_retry_btn" />
 </resources>

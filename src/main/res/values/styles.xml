@@ -31,4 +31,17 @@
 		<item name="android:src">@drawable/btn_settings_airplane_mode</item>
 		<item name="android:visibility">visible</item>
 	</style>
+
+	<style name="ErrorView">
+		<item name="android:background">@drawable/bg_sticky_default</item>
+	</style>
+
+	<style name="ErrorViewText">
+		<item name="android:textColor">@android:color/white</item>
+	</style>
+
+	<style name="ErrorViewTextView" parent="@style/ErrorViewText">
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:layout_marginBottom">5dp</item>
+	</style>
 </resources>

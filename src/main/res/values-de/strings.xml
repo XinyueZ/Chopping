@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Chopping</string>
 
-	<!--Error-handling for network.-->
+	<!--Error-handling for network-->
 	<string name="meta_parsing_error">Der Server lieferte als Inhalt dieser Seite nicht interpretierbare Daten.</string>
 	<string name="meta_data_old_error">Der Inhalt dieser Seite ist nicht aktuell, ein Fehler bedingt das Laden der Daten aus dem Cache.</string>
 	<string name="meta_data_old_offline">Der Inhalt dieser Seite ist nicht aktuell, da zurzeit keine Internetverbindung besteht.</string>
@@ -11,6 +11,9 @@
 	<string name="meta_airplane_mode">Die Inhalte dieser Seite sind nicht aktuell, da der Flugmodus aktiv ist.</string>
 	<string name="meta_reset_airplane_mode">Antippen und Ihre Flugmodus-Einstellungen direkt verwalten.</string>
 
-	<!--Content-description.-->
+	<!--Error-handling UI-->
+	<string name="btn_retry">Wiederholen</string>
+
+	<!--Content-description-->
 	<string name="cd_airplane_mode_setting">Öffnen Flugmodus-Einstellungen.</string>
 </resources>

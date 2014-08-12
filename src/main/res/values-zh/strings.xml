@@ -1,7 +1,7 @@
 <resources>
 	<string name="app_name">Chopping</string>
 
-	<!--Error-handling for network.-->
+	<!--Error-handling for network-->
 	<string name="meta_parsing_error">无法解析服务器发送的内容。</string>
 	<string name="meta_data_old_error">无法刷新数据，目前只能显示缓存内容。</string>
 	<string name="meta_data_old_offline">目前处于断线状态，无法更新显示数据内容。</string>
@@ -10,6 +10,9 @@
 	<string name="meta_no_connection">无法显示当前页面，无法和服务器通讯，检查是否在线，然后再尝试。</string>
 	<string name="meta_airplane_mode">无法刷新内容，因为目前正处于飞行状态。</string>
 	<string name="meta_reset_airplane_mode">点击，打开配置网络及飞行状态。</string>
+
+	<!--Error-handling UI-->
+	<string name="btn_retry">重新尝试</string>
 
 	<!--Content-description-->
 	<string name="cd_airplane_mode_setting">打开配置网络及飞行状态。</string>
