@@ -102,12 +102,33 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 				}
 				setText(e.networkResponse, isAirplaneModeOn);
 			} else {
+				/* Null on networkResponse means no network absolutely.*/
 				showNoNetView(context, isAirplaneModeOn);
 			}
 		}
 	}
 
 	//------------------------------------------------
+
+	/**
+	 * onCreate Called according to the life-cycle of component(Fragment, Activity, Service etc.).
+	 *
+	 * @param activity
+	 * 		An {@link android.app.Activity} if error is handled for activity.
+	 * @param errAct
+	 * 		A {@link com.chopping.activities.ErrorHandlerActivity} when there's no internet connection anymore.
+	 * 		<p/>
+	 * 		An {@link android.app.Activity} maintains an {@link com.chopping.activities.ErrorHandlerActivity} to handle no
+	 * 		internet.
+	 */
+	public void onCreate(Activity activity, Class<? extends ErrorHandlerActivity> errAct) {
+		mContextWeakRef = new WeakReference<Context>(activity);
+		View sticky = activity.findViewById(R.id.err_sticky_container);
+		mStickyBannerRef = new WeakReference<View>(sticky);
+		sticky.findViewById(R.id.open_setting_btn).setOnClickListener(this);
+		mNoNetErrorActivity = errAct == null ? ErrorHandlerActivity.class : errAct;
+		mIsErrAct = true;
+	}
 
 	/**
 	 * onCreate Called according to the life-cycle of component({@link android.support.v4.app.Fragment}, {@link
@@ -132,26 +153,6 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 		/*Force to set NULL error's activity.*/
 		mNoNetErrorActivity = null;
 		mIsErrAct = false;
-	}
-
-	/**
-	 * onCreate Called according to the life-cycle of component(Fragment, Activity, Service etc.).
-	 *
-	 * @param activity
-	 * 		An {@link android.app.Activity} if error is handled for activity.
-	 * @param errAct
-	 * 		A {@link com.chopping.activities.ErrorHandlerActivity} when there's no internet connection anymore.
-	 * 		<p/>
-	 * 		An {@link android.app.Activity} maintains an {@link com.chopping.activities.ErrorHandlerActivity} to handle no
-	 * 		internet.
-	 */
-	public void onCreate(Activity activity, Class<? extends ErrorHandlerActivity> errAct) {
-		mContextWeakRef = new WeakReference<Context>(activity);
-		View sticky = activity.findViewById(R.id.err_sticky_container);
-		mStickyBannerRef = new WeakReference<View>(sticky);
-		sticky.findViewById(R.id.open_setting_btn).setOnClickListener(this);
-		mNoNetErrorActivity = errAct == null ? ErrorHandlerActivity.class : errAct;
-		mIsErrAct = true;
 	}
 
 

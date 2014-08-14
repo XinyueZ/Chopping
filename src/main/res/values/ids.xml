@@ -6,4 +6,5 @@
 	<item type="id" name="open_setting_btn" />
 	<item type="id" name="err_msg_tv" />
 	<item type="id" name="err_retry_btn" />
+	<item type="id" name="err_thumb_iv"/>
 </resources>
