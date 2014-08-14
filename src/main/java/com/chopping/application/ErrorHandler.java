@@ -16,7 +16,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -146,9 +145,9 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * @param containerResId
 	 * 		Resource id of a layout that can hold {@code errFrg}.
 	 */
-	public void onCreate(Fragment fragment, Class<? extends ErrorHandlerFragment> errFrg, @IdRes int containerResId) {
+	public void onCreate(Fragment fragment, Class<? extends ErrorHandlerFragment> errFrg,   int containerResId) {
 		onCreate(fragment.getActivity(), null);
-		mNoNetErrorFragment = errFrg;
+		mNoNetErrorFragment = errFrg == null ? ErrorHandlerFragment.class : errFrg;
 		mContainerResId = containerResId;
 		/*Force to set NULL error's activity.*/
 		mNoNetErrorActivity = null;
