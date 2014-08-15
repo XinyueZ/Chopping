@@ -9,6 +9,7 @@ import com.chopping.exceptions.InvalidAppPropertiesException;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -22,9 +23,33 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 */
 	private static final int LAYOUT_BASE = R.layout.activity_base;
 	/**
+	 * EXTRAS. Status of available of error-handling. Default is {@code true}
+	 * <p/>
+	 * See {@link #mIsErrorHandlerAvailable}.
+	 */
+	private static final String EXTRAS_ERR_AVA = "err.ava";
+	/**
 	 * A logical that contains controlling over all network-errors.
 	 */
-	private final ErrorHandler mErrorHandler = new ErrorHandler();
+	private ErrorHandler mErrorHandler;
+	/**
+	 * {@code true} if {@link #mErrorHandler} works and shows associated {@link com.chopping.activities.ErrorHandlerActivity}.
+	 */
+	private boolean mIsErrorHandlerAvailable = true;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			mIsErrorHandlerAvailable = savedInstanceState.getBoolean(EXTRAS_ERR_AVA, true);
+		}
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		initErrorHandler();
+	}
 
 	@Override
 	protected void onResume() {
@@ -62,6 +87,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		mErrorHandler.onDestroy();
+		mErrorHandler = null;
 	}
 
 	@Override
@@ -71,8 +97,33 @@ public abstract class BaseActivity extends ActionBarActivity {
 		content.addView(getLayoutInflater().inflate(layoutResID, null),
 				new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 						ViewGroup.LayoutParams.MATCH_PARENT));
+	}
 
+	/**
+	 * Set {@code true} if {@link #mErrorHandler} works and shows associated {@link
+	 * com.chopping.activities.ErrorHandlerActivity}.
+	 *
+	 * @throws NullPointerException
+	 * 		must be thrown if it is called at lest after {@link android.app.Activity#onPostCreate(android.os.Bundle)}.
+	 */
+	protected void setErrorHandlerAvailable(boolean _isErrorHandlerAvailable) {
+		if (mErrorHandler == null) {
+			throw new NullPointerException(
+					"BaseActivity#setErrorHandlerAvailable must be call at least after onPostCreate().");
+		}
+		mIsErrorHandlerAvailable = _isErrorHandlerAvailable;
+		mErrorHandler.setErrorHandlerAvailable(mIsErrorHandlerAvailable);
+	}
+
+	/**
+	 * Initialize {@link com.chopping.application.ErrorHandler}.
+	 */
+	private void initErrorHandler() {
+		if (mErrorHandler == null) {
+			mErrorHandler = new ErrorHandler();
+		}
 		mErrorHandler.onCreate(this, null);
+		mErrorHandler.setErrorHandlerAvailable(mIsErrorHandlerAvailable);
 	}
 
 	/**

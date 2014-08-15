@@ -80,6 +80,11 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * android.support.v4.app.Fragment}.
 	 */
 	private boolean mIsErrAct;
+	/**
+	 * {@code true} if an instance of {@link ErrorHandler} works and shows associated {@link
+	 * com.chopping.activities.ErrorHandlerActivity} or {@link com.chopping.fragments.ErrorHandlerFragment}.
+	 */
+	private boolean mIsErrorHandlerAvailable = true;
 
 	public ErrorHandler() {
 	}
@@ -90,19 +95,24 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 
 	@Subscribe
 	public void onVolleyError(VolleyError e) {
-		Context context = mContextWeakRef.get();
-		if (context != null) {
-			boolean isAirplaneModeOn = NetworkUtils.isAirplaneModeOn(context);
-			if (e.networkResponse != null) {
-				int statusCode = e.networkResponse.statusCode;
-				LL.d(String.format("Error-Handling find abnormal status: %d", statusCode));
-				if (statusCode != HttpStatus.SC_OK) {
+		if(mIsErrorHandlerAvailable) {
+			Context context = mContextWeakRef.get();
+			if (context != null) {
+				boolean isAirplaneModeOn = NetworkUtils.isAirplaneModeOn(context);
+				if (e.networkResponse != null) {
+					int statusCode = e.networkResponse.statusCode;
+					LL.d(String.format("Error-Handling find abnormal status: %d", statusCode));
+					if (statusCode != HttpStatus.SC_OK) {
+						openStickyBanner(context, isAirplaneModeOn);
+					}
+					setText(e.networkResponse, isAirplaneModeOn);
+				} else if (isAirplaneModeOn) {
 					openStickyBanner(context, isAirplaneModeOn);
-				}
-				setText(e.networkResponse, isAirplaneModeOn);
-			} else {
+					setText(e.networkResponse, isAirplaneModeOn);
+				}else {
 				/* Null on networkResponse means no network absolutely.*/
-				showNoNetView(context, isAirplaneModeOn);
+					showNoNetView(context, isAirplaneModeOn);
+				}
 			}
 		}
 	}
@@ -146,7 +156,10 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * 		Resource id of a layout that can hold {@code errFrg}.
 	 */
 	public void onCreate(Fragment fragment, Class<? extends ErrorHandlerFragment> errFrg,   int containerResId) {
-		onCreate(fragment.getActivity(), null);
+		mContextWeakRef = new WeakReference<Context>(fragment.getActivity());
+		View sticky = fragment.getView().findViewById(R.id.err_sticky_container);
+		mStickyBannerRef = new WeakReference<View>(sticky);
+		sticky.findViewById(R.id.open_setting_btn).setOnClickListener(this);
 		mNoNetErrorFragment = errFrg == null ? ErrorHandlerFragment.class : errFrg;
 		mContainerResId = containerResId;
 		/*Force to set NULL error's activity.*/
@@ -273,6 +286,15 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 		}
 	}
 
+	/**
+	 * Show {@link com.chopping.activities.ErrorHandlerActivity} or {@link com.chopping.fragments.ErrorHandlerFragment}
+	 * when there's no internet.
+	 *
+	 * @param context
+	 * 		{@link android.content.Context}.
+	 * @param isAirplaneModeOn
+	 * 		{@code true} if airplane is ON.
+	 */
 	private void showNoNetView(Context context, boolean isAirplaneModeOn) {
 		String msg = context.getString(R.string.meta_data_old_offline);
 		if (mIsErrAct) {
@@ -311,4 +333,13 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	public void setShowErrorFragment(boolean _showErrorFragment) {
 		mShowErrorFragment = _showErrorFragment;
 	}
+
+	/**
+	 * Set {@code true} if {@link ErrorHandler} works and shows associated {@link com.chopping.activities.ErrorHandlerActivity}
+	 * or {@link com.chopping.fragments.ErrorHandlerFragment}.
+	 */
+	public void setErrorHandlerAvailable(boolean _isErrorHandlerAvailable) {
+		mIsErrorHandlerAvailable = _isErrorHandlerAvailable;
+	}
+
 }
