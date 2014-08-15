@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -95,7 +96,7 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 
 	@Subscribe
 	public void onVolleyError(VolleyError e) {
-		if(mIsErrorHandlerAvailable) {
+		if (mIsErrorHandlerAvailable) {
 			Context context = mContextWeakRef.get();
 			if (context != null) {
 				boolean isAirplaneModeOn = NetworkUtils.isAirplaneModeOn(context);
@@ -109,7 +110,7 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 				} else if (isAirplaneModeOn) {
 					openStickyBanner(context, isAirplaneModeOn);
 					setText(e.networkResponse, isAirplaneModeOn);
-				}else {
+				} else {
 				/* Null on networkResponse means no network absolutely.*/
 					showNoNetView(context, isAirplaneModeOn);
 				}
@@ -155,16 +156,21 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * @param containerResId
 	 * 		Resource id of a layout that can hold {@code errFrg}.
 	 */
-	public void onCreate(Fragment fragment, Class<? extends ErrorHandlerFragment> errFrg,   int containerResId) {
-		mContextWeakRef = new WeakReference<Context>(fragment.getActivity());
-		View sticky = fragment.getView().findViewById(R.id.err_sticky_container);
-		mStickyBannerRef = new WeakReference<View>(sticky);
-		sticky.findViewById(R.id.open_setting_btn).setOnClickListener(this);
-		mNoNetErrorFragment = errFrg == null ? ErrorHandlerFragment.class : errFrg;
-		mContainerResId = containerResId;
-		/*Force to set NULL error's activity.*/
-		mNoNetErrorActivity = null;
-		mIsErrAct = false;
+	public void onCreate(Fragment fragment, Class<? extends ErrorHandlerFragment> errFrg, @IdRes int containerResId) {
+		try {
+			mContextWeakRef = new WeakReference<Context>(fragment.getActivity());
+			View sticky = fragment.getView().findViewById(R.id.err_sticky_container);
+			mStickyBannerRef = new WeakReference<View>(sticky);
+			sticky.findViewById(R.id.open_setting_btn).setOnClickListener(this);
+			mNoNetErrorFragment = errFrg == null ? ErrorHandlerFragment.class : errFrg;
+			mContainerResId = containerResId;
+			/*Force to set NULL error's activity.*/
+			mNoNetErrorActivity = null;
+			mIsErrAct = false;
+		} catch (NullPointerException e) {
+			throw new NullPointerException(
+					"Can't create error-handling for fragment, checkout whether called onCreate at least after/in onViewCreated() of host-fragment.");
+		}
 	}
 
 
