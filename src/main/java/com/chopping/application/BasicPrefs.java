@@ -6,7 +6,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
-import com.chopping.bus.BusProvider;
+
 import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
 import com.chopping.exceptions.InvalidAppPropertiesException;
 import com.chopping.net.TaskHelper;
@@ -25,6 +25,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * Basic class that provides Preference storage and make it easy to store data globally. We call {@link
@@ -431,7 +432,7 @@ public class BasicPrefs {
 			TaskHelper.getRequestQueue().add(request);
 		} else {
 			/* Finish loading configuration directly. */
-			BusProvider.getBus().post(new ApplicationConfigurationDownloadedEvent());
+			EventBus.getDefault().post(new ApplicationConfigurationDownloadedEvent());
 		}
 	}
 
@@ -501,7 +502,7 @@ public class BasicPrefs {
 			setLong(LAST_UPDATE, System.currentTimeMillis());
 			mNewAppVersion = false;
 			/* Read and info front. */
-			BusProvider.getBus().post(new ApplicationConfigurationDownloadedEvent());
+			EventBus.getDefault().post(new ApplicationConfigurationDownloadedEvent());
 		}
 	}
 }

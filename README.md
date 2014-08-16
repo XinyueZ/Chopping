@@ -1,9 +1,16 @@
 Chopping
 ========
 
-Working for config App with a remote link. When network doesn't work good, the fallback will work for the App. Applcation will load configuration according to the "update_rate" which is edited in app.properties .
+A simple bootstrap which contains general behaviors in Android App Development, i e. App's configuration, Error-Handling for network communication which is very easy for client developers to avoid care about. More idea will be included as late developments.
 
-Based on Google Volley, Otto-Bus.
+Status since last push
+========
+
+Working for loading App-Config with a remote link. When network doesn't work good, a fallback works.  The Application will load configuration according to the "update_rate" which is edited in app.properties.
+
+A general error-handling of network communication has been added, including Sticky for cache status, full-screen(or contains ActionBar) for no cache status.
+
+Based on [Google Volley][1], [EvenBus][2](changed from [OttoBus][3]).
 
 Integrate into projects created by Android Studio:
 
@@ -58,8 +65,8 @@ Example loading App's configuration(From https://github.com/XinyueZ/ExampleChopp
       }
     }
     
-    Activity class:
-    @Subscribe
+    Activity class: 
+    
     public void onApplicationConfigurationDownloaded(ApplicationConfigurationDownloadedEvent _e) {
 		TextView textView = (TextView) findViewById(R.id.output_tv);
 		textView.setText(Prefs.getInstance().getOneProperty());
@@ -99,3 +106,27 @@ Example loading App's configuration(From https://github.com/XinyueZ/ExampleChopp
 		BusProvider.getBus().unregister(this);
 		super.onPause();
 	}
+
+
+  [1]: https://android.googlesource.com/platform/frameworks/volley/
+  [2]: http://greenrobot.github.io/EventBus/
+  [3]: http://square.github.io/otto/
+  
+  
+
+    Copyright Xinyue Zhao
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+  
+  

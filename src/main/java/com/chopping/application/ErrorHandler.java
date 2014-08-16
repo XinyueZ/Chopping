@@ -6,7 +6,6 @@ import com.chopping.R;
 import com.chopping.activities.ErrorHandlerActivity;
 import com.chopping.fragments.ErrorHandlerFragment;
 import com.chopping.utils.NetworkUtils;
-import com.squareup.otto.Subscribe;
 
 import org.apache.http.HttpStatus;
 
@@ -94,8 +93,7 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	//Subscribes, event-handlers
 	//------------------------------------------------
 
-	@Subscribe
-	public void onVolleyError(VolleyError e) {
+	public void onEvent(VolleyError e) {
 		if (mIsErrorHandlerAvailable) {
 			Context context = mContextWeakRef.get();
 			if (context != null) {

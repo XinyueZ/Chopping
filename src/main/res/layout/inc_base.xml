@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"  >
-	<include layout="@layout/inc_err_sticky" />
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<FrameLayout
 			android:id="@+id/content_fl"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
+
+	<include layout="@layout/inc_err_sticky" />
+
 </merge>

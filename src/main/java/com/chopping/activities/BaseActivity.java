@@ -3,7 +3,6 @@ package com.chopping.activities;
 import com.chopping.R;
 import com.chopping.application.BasicPrefs;
 import com.chopping.application.ErrorHandler;
-import com.chopping.bus.BusProvider;
 import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
 import com.chopping.exceptions.InvalidAppPropertiesException;
 
@@ -13,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import de.greenrobot.event.EventBus;
 
 /**
  * General base activity, with error-handling, loading configuration etc.
@@ -36,7 +36,22 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * {@code true} if {@link #mErrorHandler} works and shows associated {@link com.chopping.activities.ErrorHandlerActivity}.
 	 */
 	private boolean mIsErrorHandlerAvailable = true;
+	
+	//------------------------------------------------
+	//Subscribes, event-handlers
+	//------------------------------------------------
 
+	/**
+	 * Handler for {@link }
+	 *
+	 * @param e
+	 * 		Event {@link  }.
+	 */
+	public void onEvent(Object e) {
+
+	}
+
+	//------------------------------------------------
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,8 +68,12 @@ public abstract class BaseActivity extends ActionBarActivity {
 
 	@Override
 	protected void onResume() {
-		BusProvider.getBus().register(mErrorHandler);
-		BusProvider.getBus().register(this);
+		if (isStickyAvailable()) {
+			EventBus.getDefault().registerSticky(this);
+		} else {
+			EventBus.getDefault().register(this);
+		}
+		EventBus.getDefault().register(mErrorHandler);
 		super.onResume();
 
 		String mightError = null;
@@ -78,8 +97,8 @@ public abstract class BaseActivity extends ActionBarActivity {
 
 	@Override
 	protected void onPause() {
-		BusProvider.getBus().unregister(this);
-		BusProvider.getBus().unregister(mErrorHandler);
+		EventBus.getDefault().unregister(this);
+		EventBus.getDefault().unregister(mErrorHandler);
 		super.onPause();
 	}
 
@@ -132,4 +151,17 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * @return An instance of {@link com.chopping.application.BasicPrefs}.
 	 */
 	protected abstract BasicPrefs getPrefs();
+
+	/**
+	 * Is the {@link android.app.Activity}({@link android.support.v4.app.FragmentActivity}) ready to subscribe a
+	 * sticky-event or not.
+	 *
+	 * @return {@code true} if the {@link android.app.Activity}({@link android.support.v4.app.FragmentActivity})
+	 * available for sticky-events inc. normal events.
+	 * <p/>
+	 * <b>Default is {@code false}</b>.
+	 */
+	protected boolean isStickyAvailable() {
+		return false;
+	}
 }

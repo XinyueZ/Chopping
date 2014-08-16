@@ -4,13 +4,13 @@ import com.chopping.R;
 import com.chopping.application.BasicPrefs;
 import com.chopping.application.ErrorHandler;
 import com.chopping.application.LL;
-import com.chopping.bus.BusProvider;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import de.greenrobot.event.EventBus;
 
 /**
  * Basic {@link android.support.v4.app.Fragment} contains an error-handling.
@@ -42,6 +42,23 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	private boolean mIsErrorHandlerAvailable = true;
 
+	//------------------------------------------------
+	//Subscribes, event-handlers
+	//------------------------------------------------
+
+	/**
+	 * Handler for {@link }
+	 *
+	 * @param e
+	 * 		Event {@link  }.
+	 */
+	public void onEvent(Object e) {
+
+	}
+
+	//------------------------------------------------
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup parent = (ViewGroup) inflater.inflate(LAYOUT_BASE, null);
@@ -59,17 +76,22 @@ public abstract class BaseFragment extends Fragment {
 		initErrorHandler();
 	}
 
+
 	@Override
 	public void onResume() {
-		BusProvider.getBus().register(this);
-		BusProvider.getBus().register(mErrorHandler);
+		if (isStickyAvailable()) {
+			EventBus.getDefault().registerSticky(this);
+		} else {
+			EventBus.getDefault().register(this);
+		}
+		EventBus.getDefault().register(mErrorHandler);
 		super.onResume();
 	}
 
 	@Override
 	public void onPause() {
-		BusProvider.getBus().unregister(this);
-		BusProvider.getBus().unregister(mErrorHandler);
+		EventBus.getDefault().unregister(this);
+		EventBus.getDefault().unregister(mErrorHandler);
 		super.onPause();
 	}
 
@@ -134,4 +156,17 @@ public abstract class BaseFragment extends Fragment {
 	 * @return An instance of {@link com.chopping.application.BasicPrefs}.
 	 */
 	protected abstract BasicPrefs getPrefs();
+
+	/**
+	 * Is the {@link android.app.Fragment}({@link android.support.v4.app.Fragment}) ready to subscribe a sticky-event or
+	 * not.
+	 *
+	 * @return {@code true} if the {@link android.app.Fragment}({@link android.support.v4.app.Fragment})  available for
+	 * sticky-events inc. normal events.
+	 * <p/>
+	 * <b>Default is {@code false}</b>.
+	 */
+	protected boolean isStickyAvailable() {
+		return false;
+	}
 }

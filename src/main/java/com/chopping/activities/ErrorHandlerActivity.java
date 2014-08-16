@@ -2,7 +2,6 @@ package com.chopping.activities;
 
 import com.chopping.R;
 import com.chopping.application.ErrorHandler;
-import com.chopping.bus.BusProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import de.greenrobot.event.EventBus;
 
 /**
  * {@link com.chopping.activities.ErrorHandlerActivity} provides basic logical for an error happens when internet is not
@@ -36,15 +36,31 @@ public class ErrorHandlerActivity extends ActionBarActivity {
 	 */
 	private Button mErrRetryBtn;
 
+	//------------------------------------------------
+	//Subscribes, event-handlers
+	//------------------------------------------------
+
+	/**
+	 * Handler for {@link }
+	 *
+	 * @param e
+	 * 		Event {@link  }.
+	 */
+	public void onEvent(Object e) {
+
+	}
+
+	//------------------------------------------------
+
 	@Override
 	protected void onResume() {
-		BusProvider.getBus().register(this);
+		EventBus.getDefault().register(this);
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		BusProvider.getBus().unregister(this);
+		EventBus.getDefault().unregister(this);
 		super.onPause();
 	}
 

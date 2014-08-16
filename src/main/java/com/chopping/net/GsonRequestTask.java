@@ -7,7 +7,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.chopping.bus.BusProvider;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
@@ -16,6 +15,7 @@ import java.util.Set;
 
 import android.content.Context;
 import android.util.Log;
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -32,14 +32,14 @@ public final class GsonRequestTask<T> extends Request<T> {
 	private final Response.Listener<T> mSuccessListener = new Response.Listener<T>() {
 		@Override
 		public void onResponse(T _response) {
-			BusProvider.getBus().post(_response);
+			EventBus.getDefault().post(_response);
 		}
 	};
 	private static final Response.ErrorListener sErrorListener = new Response.ErrorListener() {
 
 		@Override
 		public void onErrorResponse(VolleyError _error) {
-			BusProvider.getBus().post(_error);
+			EventBus.getDefault().post(_error);
 			logError(_error);
 		}
 	};
