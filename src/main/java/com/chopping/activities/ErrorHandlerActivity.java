@@ -20,7 +20,7 @@ import de.greenrobot.event.EventBus;
  * {@link com.chopping.fragments.ErrorHandlerFragment}
  */
 public class ErrorHandlerActivity extends ActionBarActivity {
-	public static final int LAYOUT = R.layout.activity_errorhandler;
+	private static final int LAYOUT = R.layout.activity_errorhandler;
 	/**
 	 * Extras. {@link java.lang.String} description of error.
 	 * <p/>

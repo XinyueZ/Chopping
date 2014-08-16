@@ -21,7 +21,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Basic layout that contains an error-handling(a sticky).
 	 */
-	private static final int LAYOUT_BASE = R.layout.activity_base;
+	private static final int LAYOUT_BASE = R.layout.fragment_base;
 	/**
 	 * Extras. Specify an id of a{@link android.view.ViewGroup} that can show an {@link
 	 * com.chopping.fragments.ErrorHandlerFragment}.
