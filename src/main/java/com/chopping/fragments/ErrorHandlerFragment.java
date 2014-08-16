@@ -61,14 +61,21 @@ public class ErrorHandlerFragment extends Fragment {
 		retryBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EventBus.getDefault().postSticky(new ReloadEvent());
-				getFragmentManager().popBackStack(null,
-						FragmentManager.POP_BACK_STACK_INCLUSIVE);
-				FragmentTransaction trans = getFragmentManager().beginTransaction();
-				// trans.remove(_f);
-				trans.commit();
+				onReload();
 			}
 		});
+	}
+
+	/**
+	 * Call back for clicking a reload button.
+	 */
+	protected void onReload() {
+		EventBus.getDefault().postSticky(new ReloadEvent());
+		getFragmentManager().popBackStack(null,
+				FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		FragmentTransaction trans = getFragmentManager().beginTransaction();
+		// trans.remove(_f);
+		trans.commit();
 	}
 
 	@Override

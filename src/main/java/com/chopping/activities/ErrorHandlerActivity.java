@@ -69,11 +69,18 @@ public class ErrorHandlerActivity extends ActionBarActivity {
 		retryBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EventBus.getDefault().postSticky(new ReloadEvent());
-				finish();
+				onReload();
 			}
 		});
 		handleIntent(getIntent());
+	}
+
+	/**
+	 * Call back for clicking a reload button.
+	 */
+	protected void onReload() {
+		EventBus.getDefault().postSticky(new ReloadEvent());
+		finish();
 	}
 
 	@Override
