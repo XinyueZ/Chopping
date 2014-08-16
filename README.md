@@ -113,6 +113,8 @@ Example loading App's configuration(From https://github.com/XinyueZ/ExampleChopp
   [3]: http://square.github.io/otto/
   
   
+License
+========
 
     Copyright Xinyue Zhao
 
