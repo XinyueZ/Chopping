@@ -2,12 +2,12 @@ package com.chopping.activities;
 
 import com.chopping.R;
 import com.chopping.application.ErrorHandler;
+import com.chopping.bus.ReloadEvent;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import de.greenrobot.event.EventBus;
 
@@ -31,10 +31,6 @@ public class ErrorHandlerActivity extends ActionBarActivity {
 	 * Message {@link android.widget.TextView}.
 	 */
 	private TextView mErrMsgTv;
-	/**
-	 * Retry {@link android.widget.Button}.
-	 */
-	private Button mErrRetryBtn;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -69,11 +65,12 @@ public class ErrorHandlerActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(LAYOUT);
 		mErrMsgTv = (TextView) findViewById(R.id.err_msg_tv);
-		mErrRetryBtn = (Button) findViewById(R.id.err_retry_btn);
-		mErrRetryBtn.setOnClickListener(new View.OnClickListener() {
+		View retryBtn = findViewById(R.id.err_retry_btn);
+		retryBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				EventBus.getDefault().postSticky(new ReloadEvent());
+				finish();
 			}
 		});
 		handleIntent(getIntent());

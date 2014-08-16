@@ -164,9 +164,9 @@ public abstract class BaseFragment extends Fragment {
 	 * @return {@code true} if the {@link android.app.Fragment}({@link android.support.v4.app.Fragment})  available for
 	 * sticky-events inc. normal events.
 	 * <p/>
-	 * <b>Default is {@code false}</b>.
+	 * <b>Default is {@code true}</b>.
 	 */
 	protected boolean isStickyAvailable() {
-		return false;
+		return true;
 	}
 }

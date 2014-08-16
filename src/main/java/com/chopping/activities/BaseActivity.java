@@ -36,7 +36,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * {@code true} if {@link #mErrorHandler} works and shows associated {@link com.chopping.activities.ErrorHandlerActivity}.
 	 */
 	private boolean mIsErrorHandlerAvailable = true;
-	
+
 	//------------------------------------------------
 	//Subscribes, event-handlers
 	//------------------------------------------------
@@ -159,9 +159,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * @return {@code true} if the {@link android.app.Activity}({@link android.support.v4.app.FragmentActivity})
 	 * available for sticky-events inc. normal events.
 	 * <p/>
-	 * <b>Default is {@code false}</b>.
+	 * <b>Default is {@code true}</b>.
 	 */
 	protected boolean isStickyAvailable() {
-		return false;
+		return true;
 	}
 }

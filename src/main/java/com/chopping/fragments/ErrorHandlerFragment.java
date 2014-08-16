@@ -2,9 +2,13 @@ package com.chopping.fragments;
 
 import com.chopping.R;
 import com.chopping.activities.ErrorHandlerActivity;
+import com.chopping.bus.ReloadEvent;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +54,22 @@ public class ErrorHandlerFragment extends Fragment {
 		return inflater.inflate(LAYOUT, container, false);
 	}
 
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		View retryBtn = view.findViewById(R.id.err_retry_btn);
+		retryBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EventBus.getDefault().postSticky(new ReloadEvent());
+				getFragmentManager().popBackStack(null,
+						FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				FragmentTransaction trans = getFragmentManager().beginTransaction();
+				// trans.remove(_f);
+				trans.commit();
+			}
+		});
+	}
 
 	@Override
 	public void onResume() {
