@@ -1,9 +1,12 @@
 package com.chopping.fragments;
 
+import com.android.volley.VolleyError;
 import com.chopping.R;
 import com.chopping.application.BasicPrefs;
 import com.chopping.application.ErrorHandler;
 import com.chopping.application.LL;
+import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
+import com.chopping.bus.ReloadEvent;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,15 +50,34 @@ public abstract class BaseFragment extends Fragment {
 	//------------------------------------------------
 
 	/**
-	 * Handler for {@link }
+	 * Handler for {@link com.chopping.bus.ApplicationConfigurationDownloadedEvent}
 	 *
 	 * @param e
-	 * 		Event {@link  }.
+	 * 		Event {@link  com.chopping.bus.ApplicationConfigurationDownloadedEvent}.
 	 */
-	public void onEvent(Object e) {
-
+	public void onEvent(ApplicationConfigurationDownloadedEvent e) {
+		onAppConfigLoaded();
 	}
 
+	/**
+	 * Handler for {@link com.android.volley.VolleyError}
+	 *
+	 * @param e
+	 * 		Event {@link  com.android.volley.VolleyError}.
+	 */
+	public void onEvent(VolleyError e) {
+		onNetworkError();
+	}
+
+	/**
+	 * Handler for {@link com.chopping.bus.ReloadEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.chopping.bus.ReloadEvent}.
+	 */
+	public void onEvent(ReloadEvent e) {
+		onReload();
+	}
 	//------------------------------------------------
 
 
@@ -168,5 +190,26 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	protected boolean isStickyAvailable() {
 		return true;
+	}
+
+	/**
+	 * Callback after App's config loaded.
+	 */
+	protected void onAppConfigLoaded() {
+
+	}
+
+	/**
+	 * Callback when {@link com.android.volley.VolleyError} occurred.
+	 */
+	protected void onNetworkError() {
+
+	}
+
+	/**
+	 * Callback when a reload({@link com.chopping.bus.ReloadEvent}) is required.
+	 */
+	protected void onReload() {
+
 	}
 }
