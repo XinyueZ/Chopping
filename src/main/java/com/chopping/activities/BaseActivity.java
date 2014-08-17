@@ -72,6 +72,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 */
 	public void onEvent(ReloadEvent e) {
 		onReload();
+		EventBus.getDefault().removeStickyEvent(e);
 	}
 
 	//------------------------------------------------

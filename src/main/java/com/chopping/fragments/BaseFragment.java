@@ -77,6 +77,7 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	public void onEvent(ReloadEvent e) {
 		onReload();
+		EventBus.getDefault().removeStickyEvent(e);
 	}
 	//------------------------------------------------
 
