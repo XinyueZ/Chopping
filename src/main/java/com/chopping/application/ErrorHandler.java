@@ -282,6 +282,12 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 				/*Some network-errors.*/
 				if (_networkResponse != null) {
 					/*Online errors.*/
+					switch (_networkResponse.statusCode) {
+						case HttpStatus.SC_FORBIDDEN:
+						case HttpStatus.SC_MOVED_TEMPORARILY:
+							errTv.setText(R.string.meta_server_black);
+							break;
+					}
 				} else {
 					/*Offline error, no object-ref to NetworkResponse.*/
 					errTv.setText(R.string.meta_data_old_offline);
