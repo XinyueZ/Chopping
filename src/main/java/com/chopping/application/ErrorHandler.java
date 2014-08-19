@@ -285,6 +285,7 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 					switch (_networkResponse.statusCode) {
 						case HttpStatus.SC_FORBIDDEN:
 						case HttpStatus.SC_MOVED_TEMPORARILY:
+						case HttpStatus.SC_SERVICE_UNAVAILABLE:
 							errTv.setText(R.string.meta_server_black);
 							break;
 					}
