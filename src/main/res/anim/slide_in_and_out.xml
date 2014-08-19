@@ -4,13 +4,13 @@
     android:shareInterpolator="true" >
 
     <translate
-        android:duration="700"
+        android:duration="1000"
         android:fromYDelta="-100%"
         android:startOffset="200"
         android:toYDelta="0" />
     
     <translate
-        android:duration="500"
+        android:duration="1000"
         android:fromYDelta="0"
         android:startOffset="3500"
         android:toYDelta="-100%" />
