@@ -26,7 +26,7 @@
 
 	<style name="Sticky.Setting">
 		<item name="android:layout_marginRight">@dimen/err_sticky_general_margin_padding</item>
-		<item name="android:background">@android:color/transparent</item>
+		<item name="android:background">@color/selector_bg_btn</item>
 		<item name="android:contentDescription">@string/app_name</item>
 		<item name="android:src">@drawable/btn_settings_airplane_mode</item>
 		<item name="android:visibility">visible</item>

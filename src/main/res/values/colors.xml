@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<color name="err_sticky_text_clr">#cccccc</color>
+	<color name="c30">#1effffff</color>
 </resources>

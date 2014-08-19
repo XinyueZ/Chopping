@@ -85,7 +85,8 @@ public abstract class BaseFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup parent = (ViewGroup) inflater.inflate(LAYOUT_BASE, null);
-		parent.addView(container);
+		ViewGroup contentFl = (ViewGroup) parent.findViewById(R.id.content_fl);
+		contentFl.addView(container);
 		return parent;
 	}
 

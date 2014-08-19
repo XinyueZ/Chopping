@@ -15,14 +15,14 @@
 				android:gravity="center_horizontal" />
 
 		<LinearLayout
-				android:id="@+id/airplane_mode_ll"
+				android:id="@id/airplane_mode_ll"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:visibility="gone"
 				style="@style/Sticky.AirplaneMode">
 
 			<ImageButton
-					android:id="@id/open_setting_btn"
+					android:id="@id/open_airplane_setting_btn"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					style="@style/Sticky.Setting" />

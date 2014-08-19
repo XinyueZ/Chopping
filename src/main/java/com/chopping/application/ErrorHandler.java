@@ -6,14 +6,17 @@ import com.chopping.R;
 import com.chopping.activities.ErrorHandlerActivity;
 import com.chopping.fragments.ErrorHandlerFragment;
 import com.chopping.utils.NetworkUtils;
+import com.chopping.utils.Utils;
 
 import org.apache.http.HttpStatus;
 
 import java.lang.ref.WeakReference;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -33,7 +36,7 @@ import android.widget.TextView;
  *
  * @author Xinyue Zhao
  */
-public final class ErrorHandler implements Animation.AnimationListener, View.OnClickListener {
+public final class ErrorHandler implements Animation.AnimationListener  {
 	/**
 	 * Extras. {@link java.lang.String} description of error.
 	 */
@@ -86,6 +89,16 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 */
 	private boolean mIsErrorHandlerAvailable = true;
 
+	private IntentFilter mAirPlaneFilter = new IntentFilter(
+			Intent.ACTION_AIRPLANE_MODE_CHANGED);
+	private BroadcastReceiver mAirPlaneReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(final Context context, Intent intent) {
+//			onAirPlaneModeChanged(_context);
+			Utils.showShortToast(context, "airplane mode changed.");
+		}
+	};
 	public ErrorHandler() {
 	}
 
@@ -133,9 +146,18 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 		mContextWeakRef = new WeakReference<Context>(activity);
 		View sticky = activity.findViewById(R.id.err_sticky_container);
 		mStickyBannerRef = new WeakReference<View>(sticky);
-		sticky.findViewById(R.id.open_setting_btn).setOnClickListener(this);
+		sticky.findViewById(R.id.open_airplane_setting_btn)
+				.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				closeStickyBanner();
+				NetworkUtils.openNetworkSetting(v.getContext());
+			}
+		});
 		mNoNetErrorActivity = errAct == null ? ErrorHandlerActivity.class : errAct;
 		mIsErrAct = true;
+		Context context  = activity.getApplicationContext();
+		context.registerReceiver(mAirPlaneReceiver, mAirPlaneFilter);
 	}
 
 	/**
@@ -151,7 +173,7 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * 		handle no internet.
 	 * 		<p/>
 	 * 		It could be ignored if {@link #mShowErrorFragment} is {@code false}.
-	 * @param containerResId
+	 * @param containerResId {@link IdRes}.
 	 * 		Resource id of a layout that can hold {@code errFrg}.
 	 */
 	public void onCreate(Fragment fragment, Class<? extends ErrorHandlerFragment> errFrg, @IdRes int containerResId) {
@@ -159,12 +181,21 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 			mContextWeakRef = new WeakReference<Context>(fragment.getActivity());
 			View sticky = fragment.getView().findViewById(R.id.err_sticky_container);
 			mStickyBannerRef = new WeakReference<View>(sticky);
-			sticky.findViewById(R.id.open_setting_btn).setOnClickListener(this);
+			sticky.findViewById(R.id.open_airplane_setting_btn)
+					.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					closeStickyBanner();
+					NetworkUtils.openNetworkSetting(v.getContext());
+				}
+			});
 			mNoNetErrorFragment = errFrg == null ? ErrorHandlerFragment.class : errFrg;
 			mContainerResId = containerResId;
 			/*Force to set NULL error's activity.*/
 			mNoNetErrorActivity = null;
 			mIsErrAct = false;
+			Context context  = fragment.getActivity().getApplicationContext();
+			context.registerReceiver(mAirPlaneReceiver, mAirPlaneFilter);
 		} catch (NullPointerException e) {
 			throw new NullPointerException(
 					"Can't create error-handling for fragment, checkout whether called onCreate at least after/in onViewCreated() of host-fragment.");
@@ -179,10 +210,13 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * For fragment calls it in onDestroyView().
 	 */
 	public void onDestroy() {
-//		_context.unregisterReceiver(mConnectivityReceiver);
+		if( mContextWeakRef.get() != null) {
+			Context context = mContextWeakRef.get().getApplicationContext();
+			context.unregisterReceiver(mAirPlaneReceiver);
+		}
+		mAirPlaneReceiver = null;
 		mContextWeakRef = null;
 //		mIntentFilterConnectivityReceiver = null;
-//		mConnectivityReceiver = null;
 		stopAnim();
 		mAnimSet = null;
 	}
@@ -327,13 +361,6 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	}
 
 
-	@Override
-	public void onClick(View v) {
-		if (v.getId() == R.id.open_setting_btn) {
-			closeStickyBanner();
-			NetworkUtils.openNetworkSetting(v.getContext());
-		}
-	}
 
 	/**
 	 * Set {@code true} if the {@link android.support.v4.app.Fragment} that has initialized an {@link
