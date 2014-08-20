@@ -4,6 +4,7 @@ import com.android.volley.VolleyError;
 import com.chopping.R;
 import com.chopping.application.BasicPrefs;
 import com.chopping.application.ErrorHandler;
+import com.chopping.bus.AirplaneModeOnEvent;
 import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
 import com.chopping.bus.ReloadEvent;
 import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
@@ -28,7 +29,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	/**
 	 * EXTRAS. Status of available of error-handling. Default is {@code true}
 	 * <p/>
-	 * See {@link #mIsErrorHandlerAvailable}.
+	 * See {@link #mErrorHandlerAvailable}.
 	 */
 	private static final String EXTRAS_ERR_AVA = "err.ava";
 	/**
@@ -38,7 +39,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	/**
 	 * {@code true} if {@link #mErrorHandler} works and shows associated {@link com.chopping.activities.ErrorHandlerActivity}.
 	 */
-	private boolean mIsErrorHandlerAvailable = true;
+	private boolean mErrorHandlerAvailable = true;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -75,12 +76,26 @@ public abstract class BaseActivity extends ActionBarActivity {
 		EventBus.getDefault().removeStickyEvent(e);
 	}
 
+	/**
+	 * Handler for {@link com.chopping.bus.AirplaneModeOnEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.chopping.bus.AirplaneModeOnEvent}.
+	 */
+	public void onEvent(AirplaneModeOnEvent e) {
+		if(mErrorHandlerAvailable) {
+			mErrorHandler.openStickyBanner(this, true);
+			mErrorHandler.setText(null, true);
+			EventBus.getDefault().removeStickyEvent(e);
+		}
+	}
+
 	//------------------------------------------------
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			mIsErrorHandlerAvailable = savedInstanceState.getBoolean(EXTRAS_ERR_AVA, true);
+			mErrorHandlerAvailable = savedInstanceState.getBoolean(EXTRAS_ERR_AVA, true);
 		}
 	}
 
@@ -154,8 +169,8 @@ public abstract class BaseActivity extends ActionBarActivity {
 			throw new NullPointerException(
 					"BaseActivity#setErrorHandlerAvailable must be call at least after onPostCreate().");
 		}
-		mIsErrorHandlerAvailable = _isErrorHandlerAvailable;
-		mErrorHandler.setErrorHandlerAvailable(mIsErrorHandlerAvailable);
+		mErrorHandlerAvailable = _isErrorHandlerAvailable;
+		mErrorHandler.setErrorHandlerAvailable(mErrorHandlerAvailable);
 	}
 
 	/**
@@ -166,7 +181,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 			mErrorHandler = new ErrorHandler();
 		}
 		mErrorHandler.onCreate(this, null);
-		mErrorHandler.setErrorHandlerAvailable(mIsErrorHandlerAvailable);
+		mErrorHandler.setErrorHandlerAvailable(mErrorHandlerAvailable);
 	}
 
 	/**

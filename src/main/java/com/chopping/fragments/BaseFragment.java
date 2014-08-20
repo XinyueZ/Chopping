@@ -5,6 +5,7 @@ import com.chopping.R;
 import com.chopping.application.BasicPrefs;
 import com.chopping.application.ErrorHandler;
 import com.chopping.application.LL;
+import com.chopping.bus.AirplaneModeOnEvent;
 import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
 import com.chopping.bus.ReloadEvent;
 
@@ -33,7 +34,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * EXTRAS. Status of available of error-handling. Default is {@code true}
 	 * <p/>
-	 * See {@link #mIsErrorHandlerAvailable}.
+	 * See {@link #mErrorHandlerAvailable}.
 	 */
 	private static final String EXTRAS_ERR_AVA = "err.ava";
 	/**
@@ -43,7 +44,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * {@code true} if {@link #mErrorHandler} works and shows associated {@link com.chopping.fragments.ErrorHandlerFragment}.
 	 */
-	private boolean mIsErrorHandlerAvailable = true;
+	private boolean mErrorHandlerAvailable = true;
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -79,6 +80,21 @@ public abstract class BaseFragment extends Fragment {
 		onReload();
 		EventBus.getDefault().removeStickyEvent(e);
 	}
+
+	/**
+	 * Handler for {@link com.chopping.bus.AirplaneModeOnEvent}
+	 *
+	 * @param e
+	 * 		Event {@link  com.chopping.bus.AirplaneModeOnEvent}.
+	 */
+	public void onEvent(AirplaneModeOnEvent e) {
+		if(mErrorHandlerAvailable) {
+			mErrorHandler.openStickyBanner(getActivity(), true);
+			mErrorHandler.setText(null, true);
+			EventBus.getDefault().removeStickyEvent(e);
+		}
+	}
+
 	//------------------------------------------------
 
 
@@ -94,7 +110,7 @@ public abstract class BaseFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		if (savedInstanceState != null) {
-			mIsErrorHandlerAvailable = savedInstanceState.getBoolean(EXTRAS_ERR_AVA, true);
+			mErrorHandlerAvailable = savedInstanceState.getBoolean(EXTRAS_ERR_AVA, true);
 		}
 		/*It'll be nice here to init for a valid activity context.*/
 		initErrorHandler();
@@ -129,7 +145,7 @@ public abstract class BaseFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putBoolean(EXTRAS_ERR_AVA, mIsErrorHandlerAvailable);
+		outState.putBoolean(EXTRAS_ERR_AVA, mErrorHandlerAvailable);
 	}
 
 	/**
@@ -146,8 +162,8 @@ public abstract class BaseFragment extends Fragment {
 			throw new NullPointerException(
 					"BaseFragment#setErrorHandlerAvailable must be call at least after onViewCreated().");
 		}
-		mIsErrorHandlerAvailable = _isErrorHandlerAvailable;
-		mErrorHandler.setErrorHandlerAvailable(mIsErrorHandlerAvailable);
+		mErrorHandlerAvailable = _isErrorHandlerAvailable;
+		mErrorHandler.setErrorHandlerAvailable(mErrorHandlerAvailable);
 	}
 
 	/**
@@ -169,7 +185,7 @@ public abstract class BaseFragment extends Fragment {
 						this.getClass().getSimpleName()));
 			} else {
 				mErrorHandler.onCreate(this, null, conId);
-				mErrorHandler.setErrorHandlerAvailable(mIsErrorHandlerAvailable);
+				mErrorHandler.setErrorHandlerAvailable(mErrorHandlerAvailable);
 			}
 		}
 	}

@@ -4,9 +4,9 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.chopping.R;
 import com.chopping.activities.ErrorHandlerActivity;
+import com.chopping.bus.AirplaneModeOnEvent;
 import com.chopping.fragments.ErrorHandlerFragment;
 import com.chopping.utils.NetworkUtils;
-import com.chopping.utils.Utils;
 
 import org.apache.http.HttpStatus;
 
@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Error handling for components like {@link android.support.v4.app.Fragment}, {@link android.app.Activity}, {@link
@@ -63,7 +64,7 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	/**
 	 * A {@link com.chopping.fragments.ErrorHandlerFragment} when there's no internet connection anymore.
 	 * <p/>
-	 * A {@link android.support.v4.app.Fragment} maintains a {@link com.chopping.fragments.ErrorHandlerFragment} to
+	 * A {@link android.support.v4.app.Fragment} maintains an {@link com.chopping.fragments.ErrorHandlerFragment} to
 	 * handle no internet.
 	 * <p/>
 	 * It could be ignored if {@link #mShowErrorFragment} is {@code false}.
@@ -85,7 +86,7 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	private boolean mIsErrAct;
 	/**
 	 * {@code true} if an instance of {@link ErrorHandler} works and shows associated {@link
-	 * com.chopping.activities.ErrorHandlerActivity} or {@link com.chopping.fragments.ErrorHandlerFragment}.
+	 * com.chopping.activities.ErrorHandlerActivity} or an {@link com.chopping.fragments.ErrorHandlerFragment}.
 	 */
 	private boolean mIsErrorHandlerAvailable = true;
 
@@ -95,10 +96,12 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 
 		@Override
 		public void onReceive(final Context context, Intent intent) {
-//			onAirPlaneModeChanged(_context);
-			Utils.showShortToast(context, "airplane mode changed.");
+			if( NetworkUtils.isAirplaneModeOn(context)) {
+				EventBus.getDefault().postSticky(new AirplaneModeOnEvent());
+			}
 		}
 	};
+
 	public ErrorHandler() {
 	}
 
@@ -169,7 +172,7 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	 * @param errFrg
 	 * 		A {@link com.chopping.fragments.ErrorHandlerFragment} when there's no internet connection anymore.
 	 * 		<p/>
-	 * 		A {@link android.support.v4.app.Fragment} maintains a {@link com.chopping.fragments.ErrorHandlerFragment} to
+	 * 		A {@link android.support.v4.app.Fragment} maintains an {@link com.chopping.fragments.ErrorHandlerFragment} to
 	 * 		handle no internet.
 	 * 		<p/>
 	 * 		It could be ignored if {@link #mShowErrorFragment} is {@code false}.
@@ -271,7 +274,7 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	/**
 	 * Open the sticky with some animations.
 	 */
-	private void openStickyBanner(Context context, boolean isAirplane) {
+	public void openStickyBanner(Context context, boolean isAirplane) {
 		mAnimSet = (AnimationSet) AnimationUtils.loadAnimation(context, R.anim.slide_in_and_out);
 		mAnimSet.setAnimationListener(this);
 		showStickyBanner(isAirplane);
@@ -303,7 +306,7 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	 * @param _isAirplaneModeOn
 	 * 		True if the airplane has been on, and a "setting button" can open system setting to shit-down it.
 	 */
-	private void setText(NetworkResponse _networkResponse, boolean _isAirplaneModeOn) {
+	public void setText(NetworkResponse _networkResponse, boolean _isAirplaneModeOn) {
 		View sticky = mStickyBannerRef.get();
 		if (sticky != null) {
 			TextView errTv = (TextView) sticky.findViewById(R.id.err_tv);
