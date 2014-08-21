@@ -8,6 +8,7 @@
 	<string name="meta_server_black">无法显示当前内容，无法和服务器通讯，检查是否在线，然后再尝试。</string>
 	<string name="meta_airplane_mode">无法刷新内容，因为目前正处于飞行状态。</string>
 	<string name="meta_reset_airplane_mode">点击，打开配置网络及飞行状态。</string>
+	<string name="meta_load_error">无法更新显示数据内容，请检查当前网络状态。</string>
 
 	<!--Error-handling UI-->
 	<string name="btn_retry">重新尝试</string>

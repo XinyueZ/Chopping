@@ -340,6 +340,9 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 						case HttpStatus.SC_SERVICE_UNAVAILABLE:
 							errTv.setText(R.string.meta_server_old_black);
 							break;
+						default:
+							errTv.setText(R.string.meta_load_error);
+							break;
 					}
 				} else {
 					/*Offline error, no object-ref to NetworkResponse.*/
@@ -361,7 +364,7 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * 		True if the airplane has been on, and a "setting button" can open system setting to shit-down it.
 	 */
 	private void showFullView(Context context, NetworkResponse networkResponse, boolean isAirplaneModeOn) {
-		String msg = context.getString(R.string.meta_data_old_offline);
+		String msg;
 		if (isAirplaneModeOn) {
 			/*Airplane-mode ignores all other network-errors.*/
 			msg = context.getString(R.string.meta_airplane_mode);
@@ -374,6 +377,9 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 					case HttpStatus.SC_MOVED_TEMPORARILY:
 					case HttpStatus.SC_SERVICE_UNAVAILABLE:
 						msg = context.getString(R.string.meta_server_black);
+						break;
+					default:
+						msg = context.getString(R.string.meta_load_error);
 						break;
 				}
 			} else {

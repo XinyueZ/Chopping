@@ -8,6 +8,7 @@
 	<string name="meta_server_black">The requested fails because there were problems in the server communication. Please check your Internet connection and try again.</string>
 	<string name="meta_airplane_mode">The content of this page is out of date because the flight mode is active.</string>
 	<string name="meta_reset_airplane_mode">Tapping and flight mode settings directly.</string>
+	<string name="meta_load_error">The requested data could not be loaded. Please check your Internet connection and try again.</string>
 
 	<!--Error-handling UI-->
 	<string name="btn_retry">Retry</string>
