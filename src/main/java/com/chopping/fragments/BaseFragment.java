@@ -25,7 +25,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Basic layout that contains an error-handling(a sticky).
 	 */
-	private static final int LAYOUT_BASE = R.layout.fragment_base;
+	private static final int LAYOUT_BASE = R.layout.fragment_b;
 	/**
 	 * Extras. Specify an id of a{@link android.view.ViewGroup} that can show an {@link
 	 * com.chopping.fragments.ErrorHandlerFragment}.
@@ -91,7 +91,7 @@ public abstract class BaseFragment extends Fragment {
 		if (mErrorHandlerAvailable) {
 			mErrorHandler.openStickyBanner(getActivity(), true);
 			mErrorHandler.setText(null, true);
-			EventBus.getDefault().removeStickyEvent(e);
+			EventBus.getDefault().removeStickyEvent(AirplaneModeOnEvent.class);
 		}
 	}
 

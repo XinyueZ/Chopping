@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="err_sticky_text_clr">#cccccc</color>
-	<color name="c30">#1effffff</color>
+	<color name="c0">#cccccc</color>
+	<color name="c1">#1effffff</color>
+	<color name="c2">#073f5b</color>
+
+
+	<color name="bg_err">@color/c2</color>
 </resources>

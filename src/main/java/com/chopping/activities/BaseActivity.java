@@ -25,7 +25,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	/**
 	 * Basic layout that contains an error-handling(a sticky).
 	 */
-	private static final int LAYOUT_BASE = R.layout.activity_base;
+	private static final int LAYOUT_BASE = R.layout.activity_b;
 	/**
 	 * EXTRAS. Status of available of error-handling. Default is {@code true}
 	 * <p/>
@@ -86,7 +86,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 		if (mErrorHandlerAvailable) {
 			mErrorHandler.openStickyBanner(this, true);
 			mErrorHandler.setText(null, true);
-			EventBus.getDefault().removeStickyEvent(e);
+			EventBus.getDefault().removeStickyEvent(AirplaneModeOnEvent.class);
 		}
 	}
 

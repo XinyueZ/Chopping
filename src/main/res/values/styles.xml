@@ -2,7 +2,7 @@
 <resources>
 
 	<style name="StickyText">
-		<item name="android:textColor">@color/err_sticky_text_clr</item>
+		<item name="android:textColor">@color/c0</item>
 		<item name="android:textSize">@dimen/err_sticky_general_text_sz</item>
 		<item name="android:layout_gravity">center_vertical</item>
 	</style>
@@ -10,9 +10,11 @@
 	<style name="Sticky">
 		<item name="android:layout_marginLeft">@dimen/err_sticky_layout_outer_margin</item>
 		<item name="android:layout_marginRight">@dimen/err_sticky_layout_outer_margin</item>
-		<item name="android:background">@drawable/bg_sticky_default</item>
+		<item name="android:background">@color/bg_err</item>
 		<item name="android:visibility">gone</item>
+		<item name="android:layout_gravity">center_horizontal</item>
 		<item name="android:orientation">vertical</item>
+		<item name="android:paddingTop">@dimen/err_sticky_general_margin_padding</item>
 		<item name="android:paddingBottom">@dimen/err_sticky_general_margin_padding</item>
 	</style>
 
@@ -33,7 +35,7 @@
 	</style>
 
 	<style name="ErrorView">
-		<item name="android:background">@drawable/bg_sticky_default</item>
+		<item name="android:background">@color/bg_err</item>
 	</style>
 
 	<style name="ErrorViewText">
