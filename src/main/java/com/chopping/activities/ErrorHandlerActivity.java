@@ -6,6 +6,7 @@ import static android.view.View.VISIBLE;
 import com.chopping.R;
 import com.chopping.application.ErrorHandler;
 import com.chopping.bus.ReloadEvent;
+import com.chopping.utils.NetworkUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -116,7 +117,7 @@ public class ErrorHandlerActivity extends ActionBarActivity {
 			openAirplaneV.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-
+					NetworkUtils.openNetworkSetting(v.getContext());
 				}
 			});
 		}

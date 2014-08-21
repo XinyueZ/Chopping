@@ -7,6 +7,7 @@ import com.chopping.R;
 import com.chopping.activities.ErrorHandlerActivity;
 import com.chopping.application.ErrorHandler;
 import com.chopping.bus.ReloadEvent;
+import com.chopping.utils.NetworkUtils;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -80,7 +81,7 @@ public class ErrorHandlerFragment extends Fragment {
 		Bundle args = getArguments();
 		if(args != null) {
 			TextView errMsgTv = (TextView) view.findViewById(R.id.err_msg_tv);
-			String msg = args.getString(EXTRAS_ERR_MSG, null);
+			String msg = args.getString(EXTRAS_ERR_MSG);
 			errMsgTv.setText(msg);
 
 			View openAirplaneV = view.findViewById(R.id.open_airplane_setting_btn);
@@ -90,7 +91,7 @@ public class ErrorHandlerFragment extends Fragment {
 				openAirplaneV.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-
+						NetworkUtils.openNetworkSetting(v.getContext());
 					}
 				});
 			}
