@@ -1,13 +1,11 @@
 <resources>
-    <string name="app_name">Chopping</string>
+	<string name="app_name">Chopping</string>
 
 	<!--Error-handling for network.-->
 	<string name="meta_parsing_error">The server did not provide interpretable as data content of this page.</string>
-	<string name="meta_data_old_error">The content of this page is not current, an error due to loading the data from the cache.</string>
 	<string name="meta_data_old_offline">The content of this page is not current, as there is currently no Internet connection.</string>
-	<string name="meta_load_error">The requested data could not be loaded. Please check your Internet connection and try again.</string>
-	<string name="meta_server_black">The requested page can not be shown because there were problems in the server communication. Please check your Internet connection and try again.</string>
-	<string name="meta_no_connection">The page you requested was not found. Please check your Internet connection and try again.</string>
+	<string name="meta_server_old_black">The content of this page is not current, an error due to loading the data from the cache. Because there were problems in the server communication. Please check your Internet connection and try again.</string>
+	<string name="meta_server_black">The requested fails because there were problems in the server communication. Please check your Internet connection and try again.</string>
 	<string name="meta_airplane_mode">The content of this page is out of date because the flight mode is active.</string>
 	<string name="meta_reset_airplane_mode">Tapping and flight mode settings directly.</string>
 

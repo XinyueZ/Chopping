@@ -1,5 +1,8 @@
 package com.chopping.activities;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import com.chopping.R;
 import com.chopping.application.ErrorHandler;
 import com.chopping.bus.ReloadEvent;
@@ -27,6 +30,13 @@ public class ErrorHandlerActivity extends ActionBarActivity {
 	 * Equal to {@link com.chopping.fragments.ErrorHandlerFragment#EXTRAS_ERR_MSG}.
 	 */
 	public static final String EXTRAS_ERR_MSG = ErrorHandler.EXTRAS_ERR_MSG;
+	/**
+	 * Extras. A {@link boolean}, {@code true} if shows error because of airplane mode being ON, and a button that opens
+	 * setting will be shown as well.
+	 * <p/>
+	 * Equal to {@link com.chopping.fragments.ErrorHandlerFragment#EXTRAS_AIRPLANE_MODE}.
+	 */
+	public static final String EXTRAS_AIRPLANE_MODE = ErrorHandler.EXTRAS_AIRPLANE_MODE;
 	/**
 	 * Message {@link android.widget.TextView}.
 	 */
@@ -98,5 +108,17 @@ public class ErrorHandlerActivity extends ActionBarActivity {
 	private void handleIntent(Intent i) {
 		String msg = i.getStringExtra(EXTRAS_ERR_MSG);
 		mErrMsgTv.setText(msg);
+
+		View openAirplaneV = findViewById(R.id.open_airplane_setting_btn);
+		boolean isAirplaneModeOn = i.getBooleanExtra(EXTRAS_AIRPLANE_MODE, false);
+		openAirplaneV.setVisibility(isAirplaneModeOn ? VISIBLE : GONE);
+		if(isAirplaneModeOn) {
+			openAirplaneV.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
+				}
+			});
+		}
 	}
 }

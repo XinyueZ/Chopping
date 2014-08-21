@@ -83,7 +83,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * 		Event {@link  com.chopping.bus.AirplaneModeOnEvent}.
 	 */
 	public void onEvent(AirplaneModeOnEvent e) {
-		if(mErrorHandlerAvailable) {
+		if (mErrorHandlerAvailable) {
 			mErrorHandler.openStickyBanner(this, true);
 			mErrorHandler.setText(null, true);
 			EventBus.getDefault().removeStickyEvent(e);
@@ -223,5 +223,20 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 */
 	protected void onReload() {
 
+	}
+
+	/**
+	 * Call this method to decide whether a sticky on top which animates to bottom to show information about network
+	 * error or an {@link com.chopping.activities.ErrorHandlerActivity}({@link com.chopping.fragments.ErrorHandlerFragment}).
+	 * <p/>
+	 * <p/>
+	 * <b>Default shows an {@link com.chopping.activities.ErrorHandlerActivity}({@link
+	 * com.chopping.fragments.ErrorHandlerFragment})</b>
+	 *
+	 * @param shownDataOnUI
+	 * 		Set {@code true}, then a sticky will always show when network error happens.
+	 */
+	protected void setHasShownDataOnUI(boolean shownDataOnUI) {
+		mErrorHandler.setHasDataOnUI(shownDataOnUI);
 	}
 }

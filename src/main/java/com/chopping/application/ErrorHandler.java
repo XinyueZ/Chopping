@@ -37,11 +37,16 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class ErrorHandler implements Animation.AnimationListener  {
+public final class ErrorHandler implements Animation.AnimationListener, View.OnClickListener {
 	/**
 	 * Extras. {@link java.lang.String} description of error.
 	 */
 	public static final String EXTRAS_ERR_MSG = "extras.err.msg";
+	/**
+	 * Extras. A {@link boolean}, {@code true} if shows error because of airplane mode being ON, and a button that opens
+	 * setting will be shown as well.
+	 */
+	public static final String EXTRAS_AIRPLANE_MODE = "extras.airplane.mode";
 	/**
 	 * {@link android.view.View} ref to the sticky.
 	 */
@@ -85,19 +90,35 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	 */
 	private boolean mIsErrAct;
 	/**
+	 * {@code true} if the host class (subclass of {@link com.chopping.activities.BaseActivity},{@link
+	 * com.chopping.fragments.BaseFragment}) of {@link com.chopping.application.ErrorHandler} has shown data on UI.
+	 */
+	private boolean mHasDataOnUI;
+	/**
 	 * {@code true} if an instance of {@link ErrorHandler} works and shows associated {@link
 	 * com.chopping.activities.ErrorHandlerActivity} or an {@link com.chopping.fragments.ErrorHandlerFragment}.
 	 */
-	private boolean mIsErrorHandlerAvailable = true;
-
+	private boolean mErrorHandlerAvailable = true;
+	/**
+	 * {@link android.content.IntentFilter} for airplane mode change.
+	 */
 	private IntentFilter mAirPlaneFilter = new IntentFilter(
 			Intent.ACTION_AIRPLANE_MODE_CHANGED);
+	/**
+	 * {@link android.content.BroadcastReceiver} for airplane mode change.
+	 */
 	private BroadcastReceiver mAirPlaneReceiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(final Context context, Intent intent) {
-			if( NetworkUtils.isAirplaneModeOn(context)) {
-				EventBus.getDefault().postSticky(new AirplaneModeOnEvent());
+			if (NetworkUtils.isAirplaneModeOn(context)) {
+				if(mHasDataOnUI) {
+					EventBus.getDefault().postSticky(new AirplaneModeOnEvent());
+				} else {
+					if(mContextWeakRef.get() != null) {
+						showFullView(mContextWeakRef.get(), null, true);
+					}
+				}
 			}
 		}
 	};
@@ -110,23 +131,24 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	//------------------------------------------------
 
 	public void onEvent(VolleyError e) {
-		if (mIsErrorHandlerAvailable) {
+		if (mErrorHandlerAvailable) {
 			Context context = mContextWeakRef.get();
 			if (context != null) {
 				boolean isAirplaneModeOn = NetworkUtils.isAirplaneModeOn(context);
-				if (e.networkResponse != null) {
-					int statusCode = e.networkResponse.statusCode;
-					LL.d(String.format("Error-Handling find abnormal status: %d", statusCode));
-					if (statusCode != HttpStatus.SC_OK) {
-						openStickyBanner(context, isAirplaneModeOn);
+				if (isAirplaneModeOn && mHasDataOnUI) {//Show sticky.
+					openStickyBanner(context, true);
+					setText(e.networkResponse, true);
+				} else if (mHasDataOnUI) {//Show sticky.
+					if (e.networkResponse == null ||//absolute no network.
+							(e.networkResponse != null &&
+									e.networkResponse.statusCode != HttpStatus.SC_OK)//online but some problems.
+							) {
+						openStickyBanner(context, false);
 					}
-					setText(e.networkResponse, isAirplaneModeOn);
-				} else if (isAirplaneModeOn) {
-					openStickyBanner(context, isAirplaneModeOn);
-					setText(e.networkResponse, isAirplaneModeOn);
-				} else {
-				/* Null on networkResponse means no network absolutely.*/
-					showNoNetView(context, isAirplaneModeOn);
+					setText(e.networkResponse, false);
+				} else {//Show full view instead of sticky.
+					/* Null on networkResponse means no network absolutely.*/
+					showFullView(context, e.networkResponse, isAirplaneModeOn);
 				}
 			}
 		}
@@ -150,16 +172,10 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 		View sticky = activity.findViewById(R.id.err_sticky_container);
 		mStickyBannerRef = new WeakReference<View>(sticky);
 		sticky.findViewById(R.id.open_airplane_setting_btn)
-				.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				closeStickyBanner();
-				NetworkUtils.openNetworkSetting(v.getContext());
-			}
-		});
+				.setOnClickListener(this);
 		mNoNetErrorActivity = errAct == null ? ErrorHandlerActivity.class : errAct;
 		mIsErrAct = true;
-		Context context  = activity.getApplicationContext();
+		Context context = activity.getApplicationContext();
 		context.registerReceiver(mAirPlaneReceiver, mAirPlaneFilter);
 	}
 
@@ -176,8 +192,8 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	 * 		handle no internet.
 	 * 		<p/>
 	 * 		It could be ignored if {@link #mShowErrorFragment} is {@code false}.
-	 * @param containerResId {@link IdRes}.
-	 * 		Resource id of a layout that can hold {@code errFrg}.
+	 * @param containerResId
+	 * 		{@link IdRes}. Resource id of a layout that can hold {@code errFrg}.
 	 */
 	public void onCreate(Fragment fragment, Class<? extends ErrorHandlerFragment> errFrg, @IdRes int containerResId) {
 		try {
@@ -185,19 +201,13 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 			View sticky = fragment.getView().findViewById(R.id.err_sticky_container);
 			mStickyBannerRef = new WeakReference<View>(sticky);
 			sticky.findViewById(R.id.open_airplane_setting_btn)
-					.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					closeStickyBanner();
-					NetworkUtils.openNetworkSetting(v.getContext());
-				}
-			});
+					.setOnClickListener(this);
 			mNoNetErrorFragment = errFrg == null ? ErrorHandlerFragment.class : errFrg;
 			mContainerResId = containerResId;
 			/*Force to set NULL error's activity.*/
 			mNoNetErrorActivity = null;
 			mIsErrAct = false;
-			Context context  = fragment.getActivity().getApplicationContext();
+			Context context = fragment.getActivity().getApplicationContext();
 			context.registerReceiver(mAirPlaneReceiver, mAirPlaneFilter);
 		} catch (NullPointerException e) {
 			throw new NullPointerException(
@@ -213,17 +223,22 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	 * For fragment calls it in onDestroyView().
 	 */
 	public void onDestroy() {
-		if( mContextWeakRef.get() != null) {
+		if (mContextWeakRef.get() != null) {
 			Context context = mContextWeakRef.get().getApplicationContext();
 			context.unregisterReceiver(mAirPlaneReceiver);
 		}
 		mAirPlaneReceiver = null;
 		mContextWeakRef = null;
-//		mIntentFilterConnectivityReceiver = null;
+		mAirPlaneFilter = null;
 		stopAnim();
 		mAnimSet = null;
 	}
 
+	@Override
+	public void onClick(View v) {
+		closeStickyBanner();
+		NetworkUtils.openNetworkSetting(v.getContext());
+	}
 
 	/**
 	 * Show the sticky banner when network breaks down. Call openStickyBanner directly instead of calling this
@@ -299,36 +314,36 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	}
 
 	/**
-	 * Show wordings for different network errors.
+	 * Show wordings for different network errors on sticky.
 	 *
-	 * @param _networkResponse
+	 * @param networkResponse
 	 * 		A response from {@link com.android.volley.toolbox.Volley}, it might be NULL if internet has been disconnected.
-	 * @param _isAirplaneModeOn
+	 * @param isAirplaneModeOn
 	 * 		True if the airplane has been on, and a "setting button" can open system setting to shit-down it.
 	 */
-	public void setText(NetworkResponse _networkResponse, boolean _isAirplaneModeOn) {
+	public void setText(NetworkResponse networkResponse, boolean isAirplaneModeOn) {
 		View sticky = mStickyBannerRef.get();
 		if (sticky != null) {
 			TextView errTv = (TextView) sticky.findViewById(R.id.err_tv);
 			TextView errMoreTv = (TextView) sticky.findViewById(R.id.err_more_tv);
-			if (_isAirplaneModeOn) {
+			if (isAirplaneModeOn) {
 				/*Airplane-mode ignores all other network-errors.*/
 				errTv.setText(R.string.meta_airplane_mode);
 				errMoreTv.setText(R.string.meta_reset_airplane_mode);
 			} else {
 				/*Some network-errors.*/
-				if (_networkResponse != null) {
+				if (networkResponse != null) {
 					/*Online errors.*/
-					switch (_networkResponse.statusCode) {
+					switch (networkResponse.statusCode) {
 						case HttpStatus.SC_FORBIDDEN:
 						case HttpStatus.SC_MOVED_TEMPORARILY:
 						case HttpStatus.SC_SERVICE_UNAVAILABLE:
-							errTv.setText(R.string.meta_server_black);
+							errTv.setText(R.string.meta_server_old_black);
 							break;
 					}
 				} else {
 					/*Offline error, no object-ref to NetworkResponse.*/
-					errTv.setText(R.string.meta_data_old_offline);
+					errTv.setText(R.string.meta_server_old_black);
 				}
 			}
 		}
@@ -340,19 +355,42 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	 *
 	 * @param context
 	 * 		{@link android.content.Context}.
+	 * @param networkResponse
+	 * 		A response from {@link com.android.volley.toolbox.Volley}, it might be NULL if internet has been disconnected.
 	 * @param isAirplaneModeOn
-	 * 		{@code true} if airplane is ON.
+	 * 		True if the airplane has been on, and a "setting button" can open system setting to shit-down it.
 	 */
-	private void showNoNetView(Context context, boolean isAirplaneModeOn) {
+	private void showFullView(Context context, NetworkResponse networkResponse, boolean isAirplaneModeOn) {
 		String msg = context.getString(R.string.meta_data_old_offline);
+		if (isAirplaneModeOn) {
+			/*Airplane-mode ignores all other network-errors.*/
+			msg = context.getString(R.string.meta_airplane_mode);
+		} else {
+			/*Some network-errors.*/
+			if (networkResponse != null) {
+				/*Online errors.*/
+				switch (networkResponse.statusCode) {
+					case HttpStatus.SC_FORBIDDEN:
+					case HttpStatus.SC_MOVED_TEMPORARILY:
+					case HttpStatus.SC_SERVICE_UNAVAILABLE:
+						msg = context.getString(R.string.meta_server_black);
+						break;
+				}
+			} else {
+				/*Offline error, no object-ref to NetworkResponse.*/
+				msg = context.getString(R.string.meta_server_black);
+			}
+		}
 		if (mIsErrAct) {
 			Intent i = new Intent(context, mNoNetErrorActivity);
 			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			i.putExtra(EXTRAS_ERR_MSG, msg);
+			i.putExtra(EXTRAS_AIRPLANE_MODE, isAirplaneModeOn);
 			context.startActivity(i);
 		} else {
 			Bundle args = new Bundle();
 			args.putString(EXTRAS_ERR_MSG, msg);
+			args.putBoolean(EXTRAS_AIRPLANE_MODE, isAirplaneModeOn);
 			Fragment f = Fragment.instantiate(context, mNoNetErrorFragment.getName(), args);
 			if (context instanceof FragmentActivity) {
 				final FragmentActivity activity = (FragmentActivity) context;
@@ -362,7 +400,6 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 			}
 		}
 	}
-
 
 
 	/**
@@ -380,7 +417,14 @@ public final class ErrorHandler implements Animation.AnimationListener  {
 	 * or {@link com.chopping.fragments.ErrorHandlerFragment}.
 	 */
 	public void setErrorHandlerAvailable(boolean _isErrorHandlerAvailable) {
-		mIsErrorHandlerAvailable = _isErrorHandlerAvailable;
+		mErrorHandlerAvailable = _isErrorHandlerAvailable;
 	}
 
+	/**
+	 * Set {@code true} if the host class (subclass of {@link com.chopping.activities.BaseActivity},{@link
+	 * com.chopping.fragments.BaseFragment}) of {@link com.chopping.application.ErrorHandler} has shown data on UI.
+	 */
+	public void setHasDataOnUI(boolean _hasDataOnUI) {
+		mHasDataOnUI = _hasDataOnUI;
+	}
 }

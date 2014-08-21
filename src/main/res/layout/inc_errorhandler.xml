@@ -22,12 +22,21 @@
 				android:layout_centerInParent="true" />
 
 		<Button
-				android:id="@+id/err_retry_btn"
+				android:id="@id/err_retry_btn"
 				style="@style/ErrorViewTextButton"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_centerHorizontal="true"
 				android:layout_below="@id/err_msg_tv"
 				android:text="@string/btn_retry" />
+
+		<Button
+				android:id="@id/open_airplane_setting_btn"
+				style="@style/ErrorViewTextButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_below="@id/err_retry_btn"
+				android:text="@string/cd_airplane_mode_setting" />
 	</RelativeLayout>
 </merge>
