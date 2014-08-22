@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@id/err_sticky_container"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		style="@style/Sticky">
 
-	<LinearLayout
-			android:id="@id/err_sticky_container"
+	<TextView
+			android:id="@id/err_tv"
+			style="@style/StickyText"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			style="@style/Sticky">
+			android:gravity="center_horizontal" />
 
-		<TextView
-				android:id="@id/err_tv"
-				style="@style/StickyText"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center_horizontal" />
+	<LinearLayout
+			android:id="@id/airplane_mode_ll"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			style="@style/Sticky.AirplaneMode">
 
-		<LinearLayout
-				android:id="@id/airplane_mode_ll"
+		<ImageButton
+				android:id="@id/open_airplane_setting_btn"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:visibility="gone"
-				style="@style/Sticky.AirplaneMode">
+				style="@style/Sticky.Setting" />
 
-			<ImageButton
-					android:id="@id/open_airplane_setting_btn"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					style="@style/Sticky.Setting" />
-
-			<TextView
-					android:id="@id/err_more_tv"
-					style="@style/StickyText"
-					android:layout_width="fill_parent"
-					android:layout_height="wrap_content" />
-		</LinearLayout>
+		<TextView
+				android:id="@id/err_more_tv"
+				style="@style/StickyText"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content" />
 	</LinearLayout>
-</merge>
+</LinearLayout>

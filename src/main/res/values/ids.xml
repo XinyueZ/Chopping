@@ -8,5 +8,5 @@
 	<item type="id" name="err_retry_btn" />
 	<item type="id" name="err_thumb_iv"/>
 	<item type="id" name="airplane_mode_ll"/>
-	<item type="id" name="content_fl"/>
+	<item type="id" name="error_content"/>
 </resources>

@@ -14,8 +14,7 @@
 		<item name="android:visibility">gone</item>
 		<item name="android:layout_gravity">center_horizontal</item>
 		<item name="android:orientation">vertical</item>
-		<item name="android:paddingTop">@dimen/err_sticky_general_margin_padding</item>
-		<item name="android:paddingBottom">@dimen/err_sticky_general_margin_padding</item>
+		<item name="android:padding">@dimen/err_sticky_general_margin_padding</item>
 	</style>
 
 	<style name="Sticky.AirplaneMode">

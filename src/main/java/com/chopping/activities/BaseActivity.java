@@ -14,18 +14,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import de.greenrobot.event.EventBus;
 
 /**
  * General base activity, with error-handling, loading configuration etc.
  */
 public abstract class BaseActivity extends ActionBarActivity {
-	/**
-	 * Basic layout that contains an error-handling(a sticky).
-	 */
-	private static final int LAYOUT_BASE = R.layout.activity_b;
 	/**
 	 * EXTRAS. Status of available of error-handling. Default is {@code true}
 	 * <p/>
@@ -150,11 +146,13 @@ public abstract class BaseActivity extends ActionBarActivity {
 
 	@Override
 	public void setContentView(int layoutResID) {
-		super.setContentView(LAYOUT_BASE);
-		ViewGroup content = (ViewGroup) findViewById(R.id.content_fl);
-		content.addView(getLayoutInflater().inflate(layoutResID, null),
-				new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-						ViewGroup.LayoutParams.MATCH_PARENT));
+		super.setContentView(layoutResID);
+
+		ViewGroup errorVG = (ViewGroup) findViewById(R.id.error_content);
+		if (errorVG != null) {
+			View stickyV = getLayoutInflater().inflate(R.layout.inc_err_sticky, errorVG, false);
+			errorVG.addView(stickyV);
+		}
 	}
 
 	/**
@@ -164,12 +162,12 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * @throws NullPointerException
 	 * 		must be thrown if it is called at lest after {@link android.app.Activity#onPostCreate(android.os.Bundle)}.
 	 */
-	protected void setErrorHandlerAvailable(boolean _isErrorHandlerAvailable) {
+	protected void setErrorHandlerAvailable(boolean isErrorHandlerAvailable) {
 		if (mErrorHandler == null) {
 			throw new NullPointerException(
 					"BaseActivity#setErrorHandlerAvailable must be call at least after onPostCreate().");
 		}
-		mErrorHandlerAvailable = _isErrorHandlerAvailable;
+		mErrorHandlerAvailable = isErrorHandlerAvailable;
 		mErrorHandler.setErrorHandlerAvailable(mErrorHandlerAvailable);
 	}
 

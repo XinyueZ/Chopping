@@ -23,10 +23,6 @@ import de.greenrobot.event.EventBus;
  */
 public abstract class BaseFragment extends Fragment {
 	/**
-	 * Basic layout that contains an error-handling(a sticky).
-	 */
-	private static final int LAYOUT_BASE = R.layout.fragment_b;
-	/**
 	 * Extras. Specify an id of a{@link android.view.ViewGroup} that can show an {@link
 	 * com.chopping.fragments.ErrorHandlerFragment}.
 	 */
@@ -100,10 +96,12 @@ public abstract class BaseFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		ViewGroup parent = (ViewGroup) inflater.inflate(LAYOUT_BASE, null);
-		ViewGroup contentFl = (ViewGroup) parent.findViewById(R.id.content_fl);
-		contentFl.addView(container);
-		return parent;
+		ViewGroup errorVG = (ViewGroup) container.findViewById(R.id.error_content);
+		if (errorVG != null) {
+			View stickyV = inflater.inflate(R.layout.inc_err_sticky, errorVG, false);
+			errorVG.addView(stickyV);
+		}
+		return container;
 	}
 
 	@Override
@@ -157,12 +155,12 @@ public abstract class BaseFragment extends Fragment {
 	 * 		must be thrown if it is called at least after {@link android.support.v4.app.Fragment#onViewCreated(android.view.View,
 	 *        android.os.Bundle)}.
 	 */
-	protected void setErrorHandlerAvailable(boolean _isErrorHandlerAvailable) {
+	protected void setErrorHandlerAvailable(boolean isErrorHandlerAvailable) {
 		if (mErrorHandler == null) {
 			throw new NullPointerException(
 					"BaseFragment#setErrorHandlerAvailable must be call at least after onViewCreated().");
 		}
-		mErrorHandlerAvailable = _isErrorHandlerAvailable;
+		mErrorHandlerAvailable = isErrorHandlerAvailable;
 		mErrorHandler.setErrorHandlerAvailable(mErrorHandlerAvailable);
 	}
 
