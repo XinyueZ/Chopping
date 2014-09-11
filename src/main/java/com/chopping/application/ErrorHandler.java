@@ -1,15 +1,5 @@
 package com.chopping.application;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.VolleyError;
-import com.chopping.R;
-import com.chopping.activities.ErrorHandlerActivity;
-import com.chopping.bus.AirplaneModeOnEvent;
-import com.chopping.fragments.ErrorHandlerFragment;
-import com.chopping.utils.NetworkUtils;
-
-import org.apache.http.HttpStatus;
-
 import java.lang.ref.WeakReference;
 
 import android.app.Activity;
@@ -26,6 +16,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+
+import com.android.volley.NetworkResponse;
+import com.android.volley.VolleyError;
+import com.chopping.R;
+import com.chopping.activities.ErrorHandlerActivity;
+import com.chopping.bus.AirplaneModeOnEvent;
+import com.chopping.fragments.ErrorHandlerFragment;
+import com.chopping.utils.NetworkUtils;
+
+import org.apache.http.HttpStatus;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -223,7 +224,8 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 	 * For fragment calls it in onDestroyView().
 	 */
 	public void onDestroy() {
-		if (mContextWeakRef.get() != null) {
+		if (mContextWeakRef != null && //mContextWeakRef could be null when the error-handling module never initialized.
+				mContextWeakRef.get() != null) {
 			Context context = mContextWeakRef.get().getApplicationContext();
 			context.unregisterReceiver(mAirPlaneReceiver);
 		}
