@@ -1,5 +1,7 @@
 <resources>
 	<string name="app_name">Chopping</string>
+    <string name="btn_not_yet_load">以后再说</string>
+    <string name="btn_now_load">现在下载</string>
 
 	<!--Error-handling for network-->
 	<string name="meta_parsing_error">无法解析服务器发送的内容。</string>
@@ -15,4 +17,8 @@
 
 	<!--Content-description-->
 	<string name="cd_airplane_mode_setting">打开配置网络及飞行状态。</string>
+
+    <!--Update-->
+    <string name="msg_update">发现了新版本[%1$s]，你应该升级到该版本了。</string>
+    <string name="msg_update_download">新版本[%1$s]。</string>
 </resources>

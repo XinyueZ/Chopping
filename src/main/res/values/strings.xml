@@ -1,5 +1,7 @@
 <resources>
 	<string name="app_name">Chopping</string>
+    <string name="btn_not_yet_load">Not yet</string>
+    <string name="btn_now_load">Download</string>
 
 	<!--Error-handling for network.-->
 	<string name="meta_parsing_error">The server did not provide interpretable as data content of this page.</string>
@@ -16,5 +18,7 @@
 	<!--Content-description-->
 	<string name="cd_airplane_mode_setting">Open flight mode settings.</string>
 
-
+    <!--Update-->
+    <string name="msg_update">There\'s a new version [%1$s], you should update now.</string>
+    <string name="msg_update_download">New version [%1$s]。</string>
 </resources>

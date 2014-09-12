@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
+import com.chopping.bus.ApplicationConfigurationLoadingIgnoredEvent;
 import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
 import com.chopping.exceptions.InvalidAppPropertiesException;
 import com.chopping.net.TaskHelper;
@@ -128,8 +129,37 @@ public class BasicPrefs {
 	 * Storage for screen resolution(dpi).
 	 */
 	private final static String SCREEN_DPI = "DeviceData.screen.dpi";
-
-
+	//----------------------------------------------------------
+	// Description: App's update
+	// TODO comment for these.
+	//----------------------------------------------------------
+	private static final String UPDATE_HOME = "update_home";
+	private static final String UPDATE_URL = "update_url";
+	private static final String UPDATE_MANDATORY = "update_mandatory";
+	private static final String UPDATE_VERSION_CODE = "update_version_code";
+	private static final String UPDATE_VERSION_NAME = "update_version_name";
+	private static final String KEY_DOWNLOADING_UPDATE = "key.downloading.update";
+	public String getUpdateHome() {
+		return getString(UPDATE_HOME, null);
+	}
+	public String getUpdateUrl(){
+		return getString(UPDATE_URL, null);
+	}
+	public boolean isUpdateMandatory() {
+		return getBoolean(UPDATE_MANDATORY, false);
+	}
+	public int getUpdateVersionCode() {
+		return getInt(UPDATE_VERSION_CODE, 0);
+	}
+	public String getUpdateVersionName() {
+		return getString(UPDATE_VERSION_NAME, null);
+	}
+	public boolean isDownloadingUpdate() {
+		return getBoolean(KEY_DOWNLOADING_UPDATE, false);
+	}
+	public void setDownloadingUpdate(boolean downloading) {
+		setBoolean(KEY_DOWNLOADING_UPDATE, downloading);
+	}
 	/**
 	 * Constructor of {@link com.chopping.application.BasicPrefs}.
 	 *
@@ -432,7 +462,7 @@ public class BasicPrefs {
 			TaskHelper.getRequestQueue().add(request);
 		} else {
 			/* Finish loading configuration directly. */
-			EventBus.getDefault().post(new ApplicationConfigurationDownloadedEvent());
+			EventBus.getDefault().post(new ApplicationConfigurationLoadingIgnoredEvent());
 		}
 	}
 

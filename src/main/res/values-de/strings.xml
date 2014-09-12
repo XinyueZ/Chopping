@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Chopping</string>
+    <string name="btn_not_yet_load">Spät</string>
+    <string name="btn_now_load">Jetzt laden</string>
 
 	<!--Error-handling for network-->
 	<string name="meta_parsing_error">Der Server lieferte als Inhalt dieser Seite nicht interpretierbare Daten.</string>
