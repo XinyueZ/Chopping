@@ -90,6 +90,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 */
 	public void onEvent(ApplicationConfigurationLoadingIgnoredEvent e) {
 		LL.i("Ignored a change to load application's configuration.");
+		onAppConfigIgnored();
 	}
 
 	/**
@@ -257,6 +258,12 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 */
 	protected void onAppConfigLoaded() {
 
+	}
+
+	/**
+	 * Callback after ignoring a config loading.
+	 */
+	private void onAppConfigIgnored() {
 	}
 
 	/**
