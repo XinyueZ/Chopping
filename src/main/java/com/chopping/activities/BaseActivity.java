@@ -263,7 +263,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 	/**
 	 * Callback after ignoring a config loading.
 	 */
-	private void onAppConfigIgnored() {
+	protected void onAppConfigIgnored() {
 	}
 
 	/**
