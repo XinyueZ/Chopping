@@ -1,18 +1,5 @@
 package com.chopping.application;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
-
-import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
-import com.chopping.exceptions.InvalidAppPropertiesException;
-import com.chopping.net.TaskHelper;
-import com.chopping.utils.Consts;
-import com.chopping.utils.DeviceUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +12,19 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.chopping.bus.ApplicationConfigurationDownloadedEvent;
+import com.chopping.exceptions.CanNotOpenOrFindAppPropertiesException;
+import com.chopping.exceptions.InvalidAppPropertiesException;
+import com.chopping.net.TaskHelper;
+import com.chopping.utils.Consts;
+import com.chopping.utils.DeviceUtils;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -443,7 +443,7 @@ public class BasicPrefs {
 		setLong(UPDATE_RATE, !TextUtils.isEmpty(mUpdateRate) ? Integer.valueOf(mUpdateRate) *
 				ONE_HOUR :
 				SIX_HOURS);
-		LL.i(String.format("Loading after %d hours.", getLong(UPDATE_RATE, -1)));
+		LL.i(String.format("Loading after %d seconds.", getLong(UPDATE_RATE, -1)));
 	}
 
 	/**
