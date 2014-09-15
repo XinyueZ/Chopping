@@ -129,37 +129,117 @@ public class BasicPrefs {
 	 * Storage for screen resolution(dpi).
 	 */
 	private final static String SCREEN_DPI = "DeviceData.screen.dpi";
-	//----------------------------------------------------------
-	// Description: App's update
-	// TODO comment for these.
-	//----------------------------------------------------------
+	/**
+	 * Website , home-site of the application, it could be null when the update is a download from a third party url. It
+	 * should be the page of store where the application is published.
+	 * <p/>
+	 * <p/>
+	 * For example. When {@link #getUpdateHome()} return {@code null}, user updates application by downloading through
+	 * {@link #getUpdateUrl()}.
+	 */
 	private static final String UPDATE_HOME = "update_home";
+	/**
+	 * Third party url to download the new version, it should be ignored when {@link #getUpdateHome()} doesn't return
+	 * {@code null}. Because the end user should do update in store.
+	 */
 	private static final String UPDATE_URL = "update_url";
+	/**
+	 * Some extras  information for update.
+	 */
+	private static final String UPDATE_MESSAGE = "update_message";
+	/**
+	 * Indicator for whether this update is mandatory or not.
+	 */
 	private static final String UPDATE_MANDATORY = "update_mandatory";
+	/**
+	 * New version code of the application, after updating it must be equal to {@link #getAppCode()}.
+	 */
 	private static final String UPDATE_VERSION_CODE = "update_version_code";
+	/**
+	 * New version name of the application, after updating it must be equal to {@link #getAppVersion()}.
+	 */
 	private static final String UPDATE_VERSION_NAME = "update_version_name";
+	/**
+	 * Storage. If the downloading is in processing or not.
+	 */
 	private static final String KEY_DOWNLOADING_UPDATE = "key.downloading.update";
+
+	/**
+	 * Website , home-site of the application, it could be null when the update is a download from a third party url. It
+	 * should be the page of store where the application is published.
+	 * <p/>
+	 * <p/>
+	 * For example. When {@link #getUpdateHome()} return {@code null}, user updates application by downloading through
+	 * {@link #getUpdateUrl()}.
+	 *
+	 * @return Website , home-site of the application.
+	 */
 	public String getUpdateHome() {
 		return getString(UPDATE_HOME, null);
 	}
-	public String getUpdateUrl(){
+
+	/**
+	 * Third party url to download the new version, it should be ignored when {@link #getUpdateHome()} doesn't return
+	 * {@code null}. Because the end user should do update in store.
+	 *
+	 * @return The url to download the new version.
+	 */
+	public String getUpdateUrl() {
 		return getString(UPDATE_URL, null);
 	}
+
+	/**
+	 * Get some extras  information for update.
+	 *
+	 * @return information for update.
+	 */
+	public String getUpdateMessage() {
+		return getString(UPDATE_MESSAGE, null);
+	}
+
+	/**
+	 * Indicator for whether this update is mandatory or not.
+	 *
+	 * @return {@code true} if update is mandatory, user can not cancel.
+	 */
 	public boolean isUpdateMandatory() {
 		return getBoolean(UPDATE_MANDATORY, false);
 	}
+
+	/**
+	 * New version code of the application, after updating it must be equal to {@link #getAppCode()}.
+	 */
 	public int getUpdateVersionCode() {
 		return getInt(UPDATE_VERSION_CODE, 0);
 	}
+
+	/**
+	 * New version name of the application, after updating it must be equal to {@link #getAppVersion()}.
+	 */
 	public String getUpdateVersionName() {
 		return getString(UPDATE_VERSION_NAME, null);
 	}
+
+	/**
+	 * Whether downloading is in processing or not.
+	 *
+	 * @return {@code true} if downloading is running.
+	 */
 	public boolean isDownloadingUpdate() {
 		return getBoolean(KEY_DOWNLOADING_UPDATE, false);
 	}
+
+	/**
+	 * Set whether the downloading is in processing or not.
+	 *
+	 * @param downloading
+	 * 		{@code true} if download has been started, it should be set just after calling request to load to prevent some
+	 * 		mistakes. {@code false} if download is finished, it must be set after loading handler comes back.
+	 */
 	public void setDownloadingUpdate(boolean downloading) {
 		setBoolean(KEY_DOWNLOADING_UPDATE, downloading);
 	}
+
 	/**
 	 * Constructor of {@link com.chopping.application.BasicPrefs}.
 	 *
@@ -420,17 +500,16 @@ public class BasicPrefs {
 	 * 		If can not find some mandatory properties.
 	 */
 	public void downloadApplicationConfiguration() throws CanNotOpenOrFindAppPropertiesException,
-	                                                      InvalidAppPropertiesException {
+			InvalidAppPropertiesException {
 		if (mExp != null) {
 			setBoolean(APP_CAN_LIVE, false);
 			throw mExp;
 		}
 		long lastUpdate = getLong(LAST_UPDATE, -1);
-		boolean loadingConfig =
-				lastUpdate < 0 || //Fist install, no last update.
-						System.currentTimeMillis() - lastUpdate >= getLong(UPDATE_RATE, SIX_HOURS) ||
-						//Long time use and try to load newly.
-						mNewAppVersion; //App has been updated.
+		boolean loadingConfig = lastUpdate < 0 || //Fist install, no last update.
+				System.currentTimeMillis() - lastUpdate >= getLong(UPDATE_RATE, SIX_HOURS) ||
+				//Long time use and try to load newly.
+				mNewAppVersion; //App has been updated.
 		if (loadingConfig) {
 			LL.i("Loading App's configuration.");
 			/*
@@ -444,20 +523,16 @@ public class BasicPrefs {
 							writePrefsWithStream(new ByteArrayInputStream(response.getBytes()));
 							saveUpdateRate();
 						}
-					},
-					new Response.ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							LL.w(":( Can't load remote config: " + getAppConfigUrl());
-							LL.i(":) We load fallback: " + getAppConfigFallbackUrl());
-							writePrefsWithStream(mContext.getClassLoader().getResourceAsStream(
-									getAppConfigFallbackUrl()));
-							saveUpdateRate();
-						}
-					});
-			request.setRetryPolicy(new DefaultRetryPolicy(
-					10 * 1000,
-					DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+					}, new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					LL.w(":( Can't load remote config: " + getAppConfigUrl());
+					LL.i(":) We load fallback: " + getAppConfigFallbackUrl());
+					writePrefsWithStream(mContext.getClassLoader().getResourceAsStream(getAppConfigFallbackUrl()));
+					saveUpdateRate();
+				}
+			});
+			request.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
 					DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 			TaskHelper.getRequestQueue().add(request);
 		} else {
@@ -470,9 +545,7 @@ public class BasicPrefs {
 	 * Refresh update-rate for loading App's configurations.
 	 */
 	private void saveUpdateRate() {
-		setLong(UPDATE_RATE, !TextUtils.isEmpty(mUpdateRate) ? Integer.valueOf(mUpdateRate) *
-				ONE_HOUR :
-				SIX_HOURS);
+		setLong(UPDATE_RATE, !TextUtils.isEmpty(mUpdateRate) ? Integer.valueOf(mUpdateRate) * ONE_HOUR : SIX_HOURS);
 		LL.i(String.format("Loading after %d seconds.", getLong(UPDATE_RATE, -1)));
 	}
 
@@ -494,7 +567,7 @@ public class BasicPrefs {
 			 */
 			for (String name : names) {
 				valueStr = prop.getProperty(name);
-//				LL.d(String.format("%s=%s", name, valueStr));
+				//				LL.d(String.format("%s=%s", name, valueStr));
 				if (TextUtils.isDigitsOnly(valueStr)) {
 					try {
 						int intValue = Integer.valueOf(valueStr);
@@ -508,8 +581,8 @@ public class BasicPrefs {
 						float floatValue = Float.parseFloat(valueStr);
 						setFloat(name, floatValue);
 					} catch (Exception eF) {
-						if (TextUtils.equals(valueStr.toLowerCase(), "true") ||
-								TextUtils.equals(valueStr.toLowerCase(), "false")) {
+						if (TextUtils.equals(valueStr.toLowerCase(), "true") || TextUtils.equals(valueStr.toLowerCase(),
+								"false")) {
 							setBoolean(name, Boolean.parseBoolean(valueStr));
 						} else {
 							/*Have no choice, then all in to string.*/
