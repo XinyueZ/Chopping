@@ -217,4 +217,8 @@ public final class DeviceUtils {
 		audioManager.setRingerMode(mode);
 		return true;
 	}
+
+//	public static boolean setBrightness(Context cxt, float brightness) {
+//
+//	}
 }

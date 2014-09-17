@@ -61,11 +61,16 @@ public final class Utils {
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 
-	public static String encode(String _keywords) {
+	/**
+	 * Encode string for http query with UTF-8.
+	 * @param keywords
+	 * @return The encoded string.
+	 */
+	public static String encode(String keywords) {
 		try {
-			return URLEncoder.encode(_keywords, "UTF-8");
+			return URLEncoder.encode(keywords, "UTF-8");
 		} catch (UnsupportedEncodingException _e1) {
-			return new String(_keywords.trim().replace(" ", "%20").replace("&", "%26").replace(",", "%2c")
+			return new String(keywords.trim().replace(" ", "%20").replace("&", "%26").replace(",", "%2c")
 					.replace("(", "%28").replace(")", "%29").replace("!", "%21").replace("=", "%3D")
 					.replace("<", "%3C").replace(">", "%3E").replace("#", "%23").replace("$", "%24")
 					.replace("'", "%27").replace("*", "%2A").replace("-", "%2D").replace(".", "%2E")
@@ -76,9 +81,13 @@ public final class Utils {
 		}
 	}
 
-
-	public static String replaceToEncode(String _keywords) {
-		return new String(_keywords.trim().replace(" ", "%20").replace("&", "%26").replace(",", "%2c")
+	/**
+	 * Encode string for http query with simple replacement.
+	 * @param keywords
+	 * @return The encoded string.
+	 */
+	public static String replaceToEncode(String keywords) {
+		return new String(keywords.trim().replace(" ", "%20").replace("&", "%26").replace(",", "%2c")
 				.replace("(", "%28").replace(")", "%29").replace("!", "%21").replace("=", "%3D").replace("<", "%3C")
 				.replace(">", "%3E").replace("#", "%23").replace("$", "%24").replace("'", "%27").replace("*", "%2A")
 				.replace("-", "%2D").replace(".", "%2E").replace("/", "%2F").replace(":", "%3A").replace(";", "%3B")
