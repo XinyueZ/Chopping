@@ -3,13 +3,19 @@ package com.chopping.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.support.v4.hardware.display.DisplayManagerCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.chopping.application.LL;
 import com.chopping.exceptions.OperationFailException;
@@ -218,7 +224,40 @@ public final class DeviceUtils {
 		return true;
 	}
 
-//	public static boolean setBrightness(Context cxt, float brightness) {
-//
-//	}
+	/**@hide*/
+	/**
+	 * Set system brightness.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param window
+	 * 		{@link android.view.Window}.
+	 * @param brightness
+	 * 		From 0 to 1(max).
+	 *
+	 * @throws OperationFailException
+	 * 		Error fires when the operation is not success.
+	 */
+	public static void setBrightness(Context cxt, Window window, float brightness) throws OperationFailException {
+		try {
+			//Get the content resolver
+			ContentResolver cr = cxt.getContentResolver();
+			// To handle the auto.
+			Settings.System.putInt(cr, Settings.System.SCREEN_BRIGHTNESS_MODE,
+					Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+			//Get the current system brightness
+			int currentBrightness = Settings.System.getInt(cr, Settings.System.SCREEN_BRIGHTNESS);
+			//Set the system brightness using the brightness variable value.
+			Settings.System.putInt(cr, Settings.System.SCREEN_BRIGHTNESS, currentBrightness);
+			//Get the current window attributes.
+			WindowManager.LayoutParams params = window.getAttributes();
+			//Set the brightness of this window.
+			params.screenBrightness = brightness;
+			//Apply attribute changes to this window.
+			window.setAttributes(params);
+		} catch (SettingNotFoundException e) {
+			Log.e("Error", "Cannot access system brightness");
+			throw new OperationFailException();
+		}
+	}
 }
