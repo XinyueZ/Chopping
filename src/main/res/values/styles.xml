@@ -2,7 +2,7 @@
 <resources>
 
 	<style name="StickyText">
-		<item name="android:textColor">@color/c0</item>
+		<item name="android:textColor">@color/cc0</item>
 		<item name="android:textSize">@dimen/err_sticky_general_text_sz</item>
 		<item name="android:layout_gravity">center_vertical</item>
 	</style>

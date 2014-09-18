@@ -2,41 +2,45 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<RelativeLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			style="@style/ErrorView">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/ErrorView">
 
-		<ImageView
-				android:id="@id/err_thumb_iv"
-				android:layout_above="@id/err_msg_tv"
-				android:layout_centerHorizontal="true"
-				style="@style/ErrorSymbol" />
+        <ImageView
+            android:id="@id/err_thumb_iv"
+            android:layout_above="@id/err_msg_tv"
+            android:layout_centerHorizontal="true"
+            style="@style/ErrorSymbol" />
 
-		<TextView
-				android:id="@id/err_msg_tv"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				style="@style/ErrorViewTextView"
-				android:text="@string/cd_airplane_mode_setting"
-				android:layout_centerInParent="true" />
+        <TextView
+            android:id="@id/err_msg_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ErrorViewTextView"
+            android:text="@string/cd_airplane_mode_setting"
+            android:layout_centerInParent="true" />
 
-		<Button
-				android:id="@id/err_retry_btn"
-				style="@style/ErrorViewTextButton"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_centerHorizontal="true"
-				android:layout_below="@id/err_msg_tv"
-				android:text="@string/btn_retry" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/err_msg_tv"
+            android:orientation="horizontal">
 
-		<Button
-				android:id="@id/open_airplane_setting_btn"
-				style="@style/ErrorViewTextButton"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_centerHorizontal="true"
-				android:layout_below="@id/err_retry_btn"
-				android:text="@string/cd_airplane_mode_setting" />
-	</RelativeLayout>
+            <Button
+                android:id="@id/err_retry_btn"
+                style="@style/ErrorViewTextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_retry" />
+
+            <Button
+                android:id="@id/open_airplane_setting_btn"
+                style="@style/ErrorViewTextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cd_airplane_mode_setting" />
+        </LinearLayout>
+    </RelativeLayout>
 </merge>
