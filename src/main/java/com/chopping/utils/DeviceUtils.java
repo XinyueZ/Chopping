@@ -262,7 +262,7 @@ public final class DeviceUtils {
 		Settings.System.putInt(cr, Settings.System.SCREEN_BRIGHTNESS, currentBrightness);
 
 		Intent i = new Intent("com.chopping.brightness.action.REFRESH");
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		cxt.startActivity(i);
 	}
 }
