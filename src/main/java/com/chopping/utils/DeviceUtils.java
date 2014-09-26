@@ -3,6 +3,7 @@ package com.chopping.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -115,8 +116,7 @@ public final class DeviceUtils {
 	 * @param enabled
 	 * 		{@code true} Turn on, {@code false} turn off.
 	 *
-	 * @return {code null} if unconfirmed, some errors happened, {@code true} if change is success, {@code false} if
-	 * already on or off.
+	 * @return {@code true} if attempted change is success, {@code false} if already on or off.
 	 *
 	 * @throws OperationFailException
 	 * 		Error fires when the operation is not success.
@@ -183,7 +183,7 @@ public final class DeviceUtils {
 	 * @param enabled
 	 * 		{@code true} Turn on, {@code false} turn off.
 	 *
-	 * @return {@code true} if change is success. {@code false} if wifi is already enable or disable.
+	 * @return {@code true} if attempted change is success. {@code false} if wifi is already enable or disable.
 	 *
 	 * @throws OperationFailException
 	 * 		Error fires when the operation is not success.
@@ -198,6 +198,35 @@ public final class DeviceUtils {
 		} else {
 			throw new OperationFailException();
 		}
+	}
+
+	/**
+	 * Set device bluetooth enable or not.
+	 *
+	 * @param enabled
+	 * 		{@code true} if enable.
+	 *
+	 * @return {@code false} if no need to change state, bluetooth is already enable or disable. {@code true} if any
+	 * attempted change is success.
+	 *
+	 * @throws OperationFailException
+	 */
+	public static boolean setBluetoothEnabled( boolean enabled) throws OperationFailException {
+		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		boolean isEnabled = bluetoothAdapter.isEnabled();
+		if (enabled && !isEnabled) {
+			if (!bluetoothAdapter.enable()) {
+				throw new OperationFailException();
+			}
+			return true;
+		} else if (!enabled && isEnabled) {
+			if (!bluetoothAdapter.disable()) {
+				throw new OperationFailException();
+			}
+			return true;
+		}
+		// No need to change bluetooth state.
+		return false;
 	}
 
 	/**
@@ -243,9 +272,10 @@ public final class DeviceUtils {
 	 *
 	 * @param cxt
 	 * 		{@link android.content.Context}.
-	 * @param brightness The brightness level wanna.
+	 * @param brightness
+	 * 		The brightness level wanna.
 	 */
-	public static void setBrightness(Context cxt,   Brightness brightness) {
+	public static void setBrightness(Context cxt, Brightness brightness) {
 		ContentResolver cr = cxt.getContentResolver();
 		// To handle the auto.
 		Settings.System.putInt(cr, Settings.System.SCREEN_BRIGHTNESS_MODE,
