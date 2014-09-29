@@ -13,9 +13,11 @@ import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.hardware.display.DisplayManagerCompat;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
+import com.android.internal.telephony.ITelephony;
 import com.chopping.application.LL;
 import com.chopping.exceptions.OperationFailException;
 
@@ -205,6 +207,21 @@ public final class DeviceUtils {
 		} else {
 			wl.release();
 			throw new OperationFailException();
+		}
+	}
+
+
+	public static void rejectIncomingCall(Context cxt ) {
+		TelephonyManager tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
+		try {
+			Class c = Class.forName(tm.getClass().getName());
+			Method m = c.getDeclaredMethod("getITelephony");
+			m.setAccessible(true);
+			ITelephony telephonyService = (ITelephony) m.invoke(tm);
+			telephonyService.endCall();
+			LL.e("HANG UP");
+		} catch (Exception e) {
+			LL.e("Error when reject incoming: " + e.getMessage());
 		}
 	}
 

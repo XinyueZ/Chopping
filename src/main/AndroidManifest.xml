@@ -22,6 +22,14 @@
 
             </intent-filter>
         </activity>
+
+
+        <!--Event handler for reject incoming calls.-->
+        <receiver android:name=".utils.IncomingCallReceiver" android:enabled="true">
+            <intent-filter android:priority="100">
+                <action android:name="android.intent.action.PHONE_STATE"/>
+            </intent-filter>
+        </receiver>
 	</application>
 
 </manifest>
