@@ -211,6 +211,11 @@ public final class DeviceUtils {
 	}
 
 
+
+	/**
+	 * Reject incoming call.
+	 * @param cxt {@link android.content.Context}.
+	 */
 	public static void rejectIncomingCall(Context cxt ) {
 		TelephonyManager tm = (TelephonyManager) cxt.getSystemService(Context.TELEPHONY_SERVICE);
 		try {
@@ -219,7 +224,7 @@ public final class DeviceUtils {
 			m.setAccessible(true);
 			ITelephony telephonyService = (ITelephony) m.invoke(tm);
 			telephonyService.endCall();
-			LL.e("HANG UP");
+			LL.i("HANG UP");
 		} catch (Exception e) {
 			LL.e("Error when reject incoming: " + e.getMessage());
 		}

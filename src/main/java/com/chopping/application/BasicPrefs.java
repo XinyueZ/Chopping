@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -25,6 +26,7 @@ import com.chopping.exceptions.InvalidAppPropertiesException;
 import com.chopping.net.TaskHelper;
 import com.chopping.utils.Consts;
 import com.chopping.utils.DeviceUtils;
+import com.chopping.utils.IncomingCallReceiver;
 
 import de.greenrobot.event.EventBus;
 
@@ -129,6 +131,10 @@ public class BasicPrefs {
 	 * Storage for screen resolution(dpi).
 	 */
 	private final static String SCREEN_DPI = "DeviceData.screen.dpi";
+	/**
+	 * Storage, detect whether to reject incoming calls or not.
+	 */
+	private final static String REJECT_INCOMING = "Reject.incoming";
 	/**
 	 * Website , home-site of the application, it could be null when the update is a download from a third party url. It
 	 * should be the page of store where the application is published.
@@ -486,6 +492,37 @@ public class BasicPrefs {
 		return Consts.valueOf(getString(SCREEN_DPI, Consts.UNKNOWN.name()));
 	}
 
+	/**
+	 * Set whether system should reject incoming calls or not.
+	 * @param reject {@code true} if system hooks incoming calls.
+	 */
+	public void setRejectIncomingCall(boolean reject) {
+		ComponentName receiver = new ComponentName(mContext, IncomingCallReceiver.class);
+		PackageManager pm = mContext.getPackageManager();
+		boolean currentIsReject =  isRejectIncomingCall();
+		if(currentIsReject && reject) {
+			return  ;//no need to change state.
+		}
+		if(!currentIsReject && !reject) {
+			return  ;//no need to change state.
+		}
+		if (reject) {
+			pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+					PackageManager.DONT_KILL_APP);
+		} else {
+			pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+					PackageManager.DONT_KILL_APP);
+		}
+		setBoolean(REJECT_INCOMING, reject);
+	}
+
+	/**
+	 * Detect whether to reject incoming calls or not.
+	 * @return {@code true} if system hooks incoming calls. Default is {@code false}.
+	 */
+	public boolean isRejectIncomingCall() {
+		return getBoolean(REJECT_INCOMING, false);
+	}
 
 	/**
 	 * Download application's configuration, internal will use url that has been loaded from app.properties. It could
