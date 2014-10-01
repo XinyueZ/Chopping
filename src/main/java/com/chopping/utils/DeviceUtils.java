@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.hardware.display.DisplayManagerCompat;
 import android.telephony.TelephonyManager;
@@ -192,20 +191,13 @@ public final class DeviceUtils {
 	 * 		Error fires when the operation is not success.
 	 */
 	public static boolean setWifiEnabled(Context context, boolean enabled) throws OperationFailException {
-		final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-		PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "setWifiEnabled");
-		wl.acquire();
-
 		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		if ((enabled && wifiManager.isWifiEnabled()) || (!enabled && !wifiManager.isWifiEnabled())) {
-			wl.release();
 			return false;
 		}
 		if (wifiManager.setWifiEnabled(enabled)) {
-			wl.release();
 			return true;
 		} else {
-			wl.release();
 			throw new OperationFailException();
 		}
 	}
