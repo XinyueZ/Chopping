@@ -4,8 +4,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
+
+import com.chopping.application.IApp;
 
 /**
  * Utils for tools used in common Apps.
@@ -95,4 +100,63 @@ public final class Utils {
 				.replace("_", "%5F").replace("`", "%60").replace("{", "%7B").replace("|", "%7C").replace("}", "%7D"));
 	}
 
+
+	/**
+	 * Link to an external app that has _packageName. If the App has not been installed, then links to store.
+	 * <p/>
+	 * It will be tracked by Tracker.
+	 *
+	 * @param context
+	 * 		A context object
+	 * @param app
+	 * 		The app to open or direct to store if not be installed before.
+	 */
+	public static void linkToExternalApp(Context context, IApp app) {
+		/* Try to find the app with _packageName. */
+		boolean found;
+		PackageManager pm = context.getPackageManager();
+		found = isAppInstalled(app.getPackageName(), pm);
+		/* Launch the App or go to store. */
+		if (found) {
+			/* Found. Start app. */
+			Intent LaunchIntent = pm.getLaunchIntentForPackage(app.getPackageName());
+			context.startActivity(LaunchIntent);
+		} else {
+			/*To Store.*/
+			openUrl(context, app.getStoreUrl());
+		}
+	}
+
+	/**
+	 * Check whether the App with _packageName has been installed or not.
+	 *
+	 * @param packageName
+	 * @param pm
+	 *
+	 * @return
+	 */
+	public static boolean isAppInstalled(String packageName, PackageManager pm) {
+		boolean found;
+		try {
+			pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+			found = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			found = false;
+		}
+		return found;
+	}
+
+	/**
+	 * Link to an external view.
+	 *
+	 * @param context
+	 * @param to
+	 */
+	public static void openUrl(Context context, String to) {
+		if (context != null) {
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(to));
+			context.startActivity(i);
+		}
+	}
 }
