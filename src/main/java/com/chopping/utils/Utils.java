@@ -1,5 +1,10 @@
 package com.chopping.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -7,10 +12,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
 import com.chopping.application.IApp;
+import com.chopping.application.LL;
 
 /**
  * Utils for tools used in common Apps.
@@ -157,6 +164,53 @@ public final class Utils {
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse(to));
 			context.startActivity(i);
+		}
+	}
+
+
+	/**
+	 * Helper method to dump all data from DB from private location to public readable one.
+	 * <p/>
+	 * It is used for debug.
+	 * @param cxt {@link android.content.Context}.
+	 * @param dbName Database name.
+	 */
+	public static void dumpSqlite(Context cxt, String dbName) {
+		String path = "/data/data/"+cxt.getPackageName()+"/databases";
+		LL.d("Under Path: " + path);
+		File f = new File(path);
+		File files[] = f.listFiles();
+		LL.d("Under Path find files: " + files.length);
+		for (int i=0; i < files.length; i++) 	{
+			LL.d("File:" + files[i].getName());
+		}
+		String sourceLocation = path +"/" +dbName;// Your database path
+		String destLocation = dbName + ".db";
+		try {
+			File sd = Environment.getExternalStorageDirectory();
+			if(sd.canWrite()){
+				File source=new File(sourceLocation);
+				File dest=new File(sd+"/"+destLocation);
+				if(!dest.exists()){
+					dest.createNewFile();
+				}
+				LL.d("dumpSqlite from: " + source.getAbsolutePath());
+				if(source.exists()){
+					LL.d("dumpSqlite to: " + dest.getAbsolutePath());
+					InputStream src=new FileInputStream(source);
+					OutputStream dst=new FileOutputStream(dest);
+					// Copy the bits from instream to outstream
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = src.read(buf)) > 0) {
+						dst.write(buf, 0, len);
+					}
+					src.close();
+					dst.close();
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 }
