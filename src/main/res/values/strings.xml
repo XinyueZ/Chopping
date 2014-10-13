@@ -21,4 +21,10 @@
     <!--Update-->
     <string name="msg_update">There\'s a new version [%1$s], you should update now.</string>
     <string name="msg_update_download">New version [%1$s]。</string>
+
+    <!-- External Apps -->
+    <string name="extapp_title">More Apps:</string>
+    <string name="extapp_download">Inst.</string>
+    <string name="extapp_buy">Buy</string>
+    <string name="extapp_open">Start</string>
 </resources>

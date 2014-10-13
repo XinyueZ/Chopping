@@ -21,4 +21,10 @@
     <!--Update-->
     <string name="msg_update">发现了新版本[%1$s]，你应该升级到该版本了。</string>
     <string name="msg_update_download">新版本[%1$s]。</string>
+
+    <!-- External Apps -->
+    <string name="extapp_title">其他Apps:</string>
+    <string name="extapp_download">下载</string>
+    <string name="extapp_buy">购买</string>
+    <string name="extapp_open">启动</string>
 </resources>

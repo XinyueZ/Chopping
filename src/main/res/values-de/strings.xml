@@ -17,4 +17,10 @@
 
 	<!--Content-description-->
 	<string name="cd_airplane_mode_setting">Öffnen Flugmodus-Einstellungen.</string>
+
+    <!-- External Apps -->
+    <string name="extapp_title">Weitere Apps:</string>
+    <string name="extapp_download">gratis</string>
+    <string name="extapp_buy">Kuafen</string>
+    <string name="extapp_open">öffnen</string>
 </resources>

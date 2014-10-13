@@ -136,6 +136,10 @@ public class BasicPrefs {
 	 */
 	private final static String REJECT_INCOMING = "Reject.incoming";
 	/**
+	 * API. Get list of all external applications.
+	 */
+	private static final String KEY_APP_LIST = "app_list";
+	/**
 	 * Website , home-site of the application, it could be null when the update is a download from a third party url. It
 	 * should be the page of store where the application is published.
 	 * <p/>
@@ -414,6 +418,15 @@ public class BasicPrefs {
 	 */
 	private String getAppConfigFallbackUrl() {
 		return getString(APP_CONFIG_FALLBACK, null);
+	}
+
+	/**
+	 * Get API for all external applications.
+	 *
+	 * @return API.
+	 */
+	public String getApiAppList() {
+		return getString(KEY_APP_LIST, null);
 	}
 
 	/**
