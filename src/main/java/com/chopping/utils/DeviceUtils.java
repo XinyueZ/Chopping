@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build.VERSION_CODES;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.hardware.display.DisplayManagerCompat;
@@ -323,5 +325,53 @@ public final class DeviceUtils {
 		Intent i = new Intent("com.chopping.brightness.action.REFRESH");
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		cxt.startActivity(i);
+	}
+
+	/**@hiden*/
+	/**
+	 * Turn on GPS, <b>it is unofficial method to do it.  Not working in latest android version 4.4</b>
+	 * See. <a href="http://stackoverflow.com/questions/15426144/turning-on-and-off-gps-programmatically-in-android-4-0-and-above">StackOverflow</a>
+	 * @param cxt {@link android.content.Context}.
+	 */
+	public static void turnGPSOn(Context  cxt) {
+		String provider = Settings.Secure.getString(cxt.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		if(!provider.contains("gps")&&
+				android.os.Build.VERSION.SDK_INT < VERSION_CODES.KITKAT) { //if gps is enabled
+			Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+			intent.putExtra("enabled", true);
+			cxt.sendBroadcast(intent);
+		}
+
+		if(!provider.contains("gps")){ //if gps is disabled
+			final Intent poke = new Intent();
+			poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+			poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+			poke.setData(Uri.parse("3"));
+			cxt.sendBroadcast(poke);
+		}
+	}
+
+	/**@hiden*/
+	/**
+	 * Turn off GPS, <b>it is unofficial method to do it.  Not working in latest android version 4.4</b>
+	 * See. <a href="http://stackoverflow.com/questions/15426144/turning-on-and-off-gps-programmatically-in-android-4-0-and-above">StackOverflow</a>
+	 * @param cxt {@link android.content.Context}.
+	 */
+	public static void turnGPSOff(Context  cxt) {
+		String provider = Settings.Secure.getString(cxt.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		if(provider.contains("gps")&&
+				android.os.Build.VERSION.SDK_INT < VERSION_CODES.KITKAT) { //if gps is enabled
+			Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+			intent.putExtra("enabled", false);
+			cxt.sendBroadcast(intent);
+		}
+
+		if(provider.contains("gps")){ //if gps is enabled
+			final Intent poke = new Intent();
+			poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+			poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+			poke.setData(Uri.parse("3"));
+			cxt.sendBroadcast(poke);
+		}
 	}
 }

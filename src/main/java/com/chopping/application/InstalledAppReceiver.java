@@ -16,9 +16,9 @@ import de.greenrobot.event.EventBus;
  */
 public final class InstalledAppReceiver extends BroadcastReceiver {
 	@Override
-	public void onReceive(Context _context, Intent _intent) {
+	public void onReceive(Context context, Intent intent) {
 		//Info UI to refresh button status.
-		Uri data = _intent.getData();
+		Uri data = intent.getData();
 		String packageName = data.getSchemeSpecificPart();
 		EventBus.getDefault().post(new ExternalAppChangedEvent(packageName));
 	}

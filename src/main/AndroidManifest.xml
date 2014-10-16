@@ -24,24 +24,7 @@
         </activity>
 
 
-        <!--Event handler for reject incoming calls.-->
-        <receiver android:name=".utils.IncomingCallReceiver" android:enabled="false">
-            <intent-filter android:priority="100">
-                <action android:name="android.intent.action.PHONE_STATE"/>
-            </intent-filter>
-        </receiver>
 
-        <receiver
-            android:name=".application.InstalledAppReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-
-                <data android:scheme="package"/>
-            </intent-filter>
-        </receiver>
 	</application>
 
 </manifest>
