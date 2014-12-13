@@ -1,7 +1,5 @@
 package com.chopping.utils;
 
-import com.chopping.application.LL;
-
 import java.math.BigInteger;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -10,6 +8,7 @@ import java.net.SocketException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
+import java.util.Map;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -19,6 +18,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+
+import com.chopping.application.LL;
 
 /**
  * Utils for network.
@@ -194,5 +195,22 @@ public final class NetworkUtils {
 	 */
 	public static void openNetworkSetting(Context _context) {
 		_context.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+	}
+
+	/**
+	 * Do some correct on http-header, because not all Android-versions add standard headers automatically.
+	 * @param headers The available http-header.
+	 */
+	public static void makeHttpHeaders(Map<String, String> headers) {
+
+		if (headers.get("Accept-Encoding") == null) {
+			headers.put("Accept-Encoding", "gzip");
+		}
+		if (headers.get("Content-Type") == null) {
+			headers.put("Content-Type", "application/x-www-form-urlencoded");
+		}
+		if (headers.get("Content-Length") == null) {
+			headers.put("Content-Length", "0");
+		}
 	}
 }
