@@ -1,5 +1,12 @@
 package com.chopping.net;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
+import java.util.Set;
+
+import android.content.Context;
+import android.util.Log;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -9,12 +16,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.JsonSyntaxException;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
-import java.util.Set;
-
-import android.content.Context;
-import android.util.Log;
 import de.greenrobot.event.EventBus;
 
 
@@ -25,7 +26,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author Xinyue Zhao
  */
-public final class GsonRequestTask<T> extends Request<T> {
+public   class GsonRequestTask<T> extends Request<T> {
 
 	public static final String TAG = "GsonRequestTask";
 	protected static final String COOKIE_KEY = "Cookie";

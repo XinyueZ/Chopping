@@ -133,23 +133,24 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 
 	public void onEvent(VolleyError e) {
 		if (mErrorHandlerAvailable) {
-			Context context = mContextWeakRef.get();
-			if (context != null) {
-				boolean isAirplaneModeOn = NetworkUtils.isAirplaneModeOn(context);
-				if (isAirplaneModeOn && mHasDataOnUI) {//Show sticky.
-					openStickyBanner(context, true);
-					setText(e.networkResponse, true);
-				} else if (mHasDataOnUI) {//Show sticky.
-					if (e.networkResponse == null ||//absolute no network.
-							(e.networkResponse != null &&
-									e.networkResponse.statusCode != HttpStatus.SC_OK)//online but some problems.
-							) {
-						openStickyBanner(context, false);
-					}
-					setText(e.networkResponse, false);
-				} else {//Show full view instead of sticky.
+			if(mContextWeakRef != null) {
+				Context context = mContextWeakRef.get();
+				if (context != null) {
+					boolean isAirplaneModeOn = NetworkUtils.isAirplaneModeOn(context);
+					if (isAirplaneModeOn && mHasDataOnUI) {//Show sticky.
+						openStickyBanner(context, true);
+						setText(e.networkResponse, true);
+					} else if (mHasDataOnUI) {//Show sticky.
+						if (e.networkResponse == null ||//absolute no network.
+								(e.networkResponse != null && e.networkResponse.statusCode != HttpStatus.SC_OK)//online but some problems.
+								) {
+							openStickyBanner(context, false);
+						}
+						setText(e.networkResponse, false);
+					} else {//Show full view instead of sticky.
 					/* Null on networkResponse means no network absolutely.*/
-					showFullView(context, e.networkResponse, isAirplaneModeOn);
+						showFullView(context, e.networkResponse, isAirplaneModeOn);
+					}
 				}
 			}
 		}
