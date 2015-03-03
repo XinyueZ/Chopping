@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.StringRes;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.chopping.R;
@@ -225,7 +226,7 @@ public final class Utils {
 	 *
 	 *
 	 */
-	protected static int getActionBarHeight(Context cxt) {
+	public static int getActionBarHeight(Context cxt) {
 		int[] abSzAttr;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			abSzAttr = new int[] { android.R.attr.actionBarSize };
@@ -234,5 +235,19 @@ public final class Utils {
 		}
 		TypedArray a = cxt.obtainStyledAttributes(abSzAttr);
 		return a.getDimensionPixelSize(0, -1);
+	}
+
+	/**
+	 * This method converts device specific pixels to density independent pixels.
+	 *
+	 * @param context
+	 * 		Context to get resources and device specific display metrics
+	 * @param px
+	 * 		A value in px (pixels) unit. Which we need to convert into db
+	 *
+	 * @return A float value to represent dp equivalent to px value
+	 */
+	public static float convertPixelsToDp(Context context, float px) {
+		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources().getDisplayMetrics());
 	}
 }
