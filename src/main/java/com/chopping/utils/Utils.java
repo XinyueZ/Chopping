@@ -11,11 +11,14 @@ import java.net.URLEncoder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import com.chopping.R;
 import com.chopping.application.IApp;
 import com.chopping.application.LL;
 
@@ -212,5 +215,24 @@ public final class Utils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+
+	/**
+	 *
+	 * @param cxt {@link android.content.Context}.
+	 * @return  Height of actionbar.
+	 *
+	 *
+	 */
+	protected static int getActionBarHeight(Context cxt) {
+		int[] abSzAttr;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			abSzAttr = new int[] { android.R.attr.actionBarSize };
+		} else {
+			abSzAttr = new int[] { R.attr.actionBarSize };
+		}
+		TypedArray a = cxt.obtainStyledAttributes(abSzAttr);
+		return a.getDimensionPixelSize(0, -1);
 	}
 }
