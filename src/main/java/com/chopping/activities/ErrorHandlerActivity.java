@@ -1,19 +1,20 @@
 package com.chopping.activities;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 
 import com.chopping.R;
 import com.chopping.application.ErrorHandler;
 import com.chopping.bus.ReloadEvent;
 import com.chopping.utils.NetworkUtils;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.View;
-import android.widget.TextView;
 import de.greenrobot.event.EventBus;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * {@link com.chopping.activities.ErrorHandlerActivity} provides basic logical for an error happens when internet is not
@@ -23,7 +24,7 @@ import de.greenrobot.event.EventBus;
  * <p/>
  * {@link com.chopping.fragments.ErrorHandlerFragment}
  */
-public class ErrorHandlerActivity extends ActionBarActivity {
+public class ErrorHandlerActivity extends AppCompatActivity {
 	private static final int LAYOUT = R.layout.activity_errorhandler;
 	/**
 	 * Extras. {@link java.lang.String} description of error.

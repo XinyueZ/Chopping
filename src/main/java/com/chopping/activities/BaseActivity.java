@@ -292,7 +292,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * 		Set {@code true}, then a sticky will always show when network error happens.
 	 */
 	protected void setHasShownDataOnUI(boolean shownDataOnUI) {
-		mErrorHandler.setHasDataOnUI(shownDataOnUI);
+		if(mErrorHandler!=null) {
+			mErrorHandler.setHasDataOnUI(shownDataOnUI);
+		}
 	}
 
 
