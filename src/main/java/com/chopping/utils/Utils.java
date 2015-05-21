@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Random;
 
@@ -220,6 +222,7 @@ public final class Utils {
 	}
 
 
+
 	/**
 	 *
 	 * @param cxt {@link android.content.Context}.
@@ -273,5 +276,27 @@ public final class Utils {
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 
 		return randomNum;
+	}
+
+	/**
+	 * Convert uri-str to {@link URI}.
+	 * @param uriStr The original uri-str.
+	 * @return {@link URI}.
+	 */
+	public static URI uriStr2URI(String uriStr) {
+		Uri uri = Uri.parse(uriStr);
+		String host = uri.getHost();
+		String body = uri.getEncodedPath();
+		URI ui = null;
+		try {
+			  ui = new URI(
+					"http",
+					host,
+					body,
+					null);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return ui;
 	}
 }
