@@ -277,8 +277,6 @@ public final class Utils {
 
 		return randomNum;
 	}
-
-<<<<<<< Updated upstream
 	/**
 	 * Convert uri-str to {@link URI}.
 	 * @param uriStr The original uri-str.
@@ -290,16 +288,12 @@ public final class Utils {
 		String body = uri.getEncodedPath();
 		URI ui = null;
 		try {
-			  ui = new URI(
-					"http",
-					host,
-					body,
-					null);
+			ui = new URI("http", host, body, null);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		return ui;
-=======
+	}
 
 	/**
 	 * Standard sharing app for sharing on actionbar.
@@ -315,6 +309,5 @@ public final class Utils {
 			return i;
 		}
 		return null;
->>>>>>> Stashed changes
 	}
 }
