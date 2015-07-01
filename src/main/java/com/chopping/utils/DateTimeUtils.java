@@ -68,8 +68,23 @@ public final class DateTimeUtils {
 	 *
 	 * @return A date string format.
 	 */
-	public static String convertTimestamps2DateString(Context cxt, long timestamps) {
+	public static String timeConvert1(Context cxt, long timestamps) {
 		return formatDateTime(cxt, timestamps, FORMAT_SHOW_YEAR | FORMAT_SHOW_DATE |
 				FORMAT_SHOW_TIME | FORMAT_ABBREV_MONTH);
+	}
+
+
+	/**
+	 * Convert a timestamps to a readable date in string.
+	 *
+	 * @param cxt
+	 * 		{@link android.content.Context}.
+	 * @param timestamps
+	 * 		A long value for a timestamps.
+	 *
+	 * @return A date string format.
+	 */
+	public static String timeConvert2(Context cxt, long timestamps) {
+		return formatDateTime(cxt, timestamps, FORMAT_SHOW_YEAR | FORMAT_SHOW_DATE | FORMAT_ABBREV_MONTH);
 	}
 }
