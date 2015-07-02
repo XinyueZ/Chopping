@@ -6,16 +6,23 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.StringRes;
+import android.util.TypedValue;
 import android.widget.Toast;
 
+import com.chopping.R;
 import com.chopping.application.IApp;
 import com.chopping.application.LL;
 
@@ -212,5 +219,95 @@ public final class Utils {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+
+
+	/**
+	 *
+	 * @param cxt {@link android.content.Context}.
+	 * @return  Height of actionbar.
+	 *
+	 *
+	 */
+	public static int getActionBarHeight(Context cxt) {
+		int[] abSzAttr;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			abSzAttr = new int[] { android.R.attr.actionBarSize };
+		} else {
+			abSzAttr = new int[] { R.attr.actionBarSize };
+		}
+		TypedArray a = cxt.obtainStyledAttributes(abSzAttr);
+		return a.getDimensionPixelSize(0, -1);
+	}
+
+	/**
+	 * This method converts device specific pixels to density independent pixels.
+	 *
+	 * @param context
+	 * 		Context to get resources and device specific display metrics
+	 * @param px
+	 * 		A value in px (pixels) unit. Which we need to convert into db
+	 *
+	 * @return A float value to represent dp equivalent to px value
+	 */
+	public static float convertPixelsToDp(Context context, float px) {
+		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources().getDisplayMetrics());
+	}
+
+
+	/**
+	 * Returns a pseudo-random number between min and max, inclusive.
+	 * The difference between min and max can be at most
+	 * <code>Integer.MAX_VALUE - 1</code>.
+	 *
+	 * @param min Min value
+	 * @param max Max value.  Must be greater than min.
+	 * @return Integer between min and max, inclusive.
+	 * @see java.util.Random#nextInt(int)
+	 */
+	public static int randInt(int min, int max) {
+
+		// Usually this can be a field rather than a method variable
+		Random rand = new Random();
+
+		// nextInt is normally exclusive of the top value,
+		// so add 1 to make it inclusive
+		int randomNum = rand.nextInt((max - min) + 1) + min;
+
+		return randomNum;
+	}
+	/**
+	 * Convert uri-str to {@link URI}.
+	 * @param uriStr The original uri-str.
+	 * @return {@link URI}.
+	 */
+	public static URI uriStr2URI(String uriStr) {
+		Uri uri = Uri.parse(uriStr);
+		String host = uri.getHost();
+		String body = uri.getEncodedPath();
+		URI ui = null;
+		try {
+			ui = new URI("http", host, body, null);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return ui;
+	}
+
+	/**
+	 * Standard sharing app for sharing on actionbar.
+	 */
+	public static Intent getDefaultShareIntent(android.support.v7.widget.ShareActionProvider provider, String subject,
+			String body) {
+		if (provider != null) {
+			Intent i = new Intent(Intent.ACTION_SEND);
+			i.setType("text/plain");
+			i.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+			i.putExtra(android.content.Intent.EXTRA_TEXT, body);
+			provider.setShareIntent(i);
+			return i;
+		}
+		return null;
 	}
 }

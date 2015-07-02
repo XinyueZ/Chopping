@@ -3,7 +3,6 @@ package com.chopping.activities;
 import java.io.File;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -16,7 +15,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,7 +39,7 @@ import static android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE;
 /**
  * General base activity, with error-handling, loading configuration etc.
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 	/**
 	 * EXTRAS. Status of available of error-handling. Default is {@code true}
 	 * <p/>
@@ -206,6 +206,14 @@ public abstract class BaseActivity extends ActionBarActivity {
 		}
 	}
 
+	public void setUpErrorHandling(ViewGroup errorContentVg) {
+		ViewGroup errorVG = errorContentVg;
+		if (errorVG != null) {
+			View stickyV = getLayoutInflater().inflate(R.layout.inc_err_sticky, errorVG, false);
+			errorVG.addView(stickyV);
+		}
+	}
+
 	/**
 	 * Set {@code true} if {@link #mErrorHandler} works and shows associated {@link
 	 * com.chopping.activities.ErrorHandlerActivity}.
@@ -292,7 +300,9 @@ public abstract class BaseActivity extends ActionBarActivity {
 	 * 		Set {@code true}, then a sticky will always show when network error happens.
 	 */
 	protected void setHasShownDataOnUI(boolean shownDataOnUI) {
-		mErrorHandler.setHasDataOnUI(shownDataOnUI);
+		if(mErrorHandler!=null) {
+			mErrorHandler.setHasDataOnUI(shownDataOnUI);
+		}
 	}
 
 
