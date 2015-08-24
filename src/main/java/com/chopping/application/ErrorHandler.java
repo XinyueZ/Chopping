@@ -25,7 +25,6 @@ import com.chopping.bus.AirplaneModeOnEvent;
 import com.chopping.fragments.ErrorHandlerFragment;
 import com.chopping.utils.NetworkUtils;
 
-import org.apache.http.HttpStatus;
 
 import de.greenrobot.event.EventBus;
 
@@ -142,7 +141,7 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 						setText(e.networkResponse, true);
 					} else if (mHasDataOnUI) {//Show sticky.
 						if (e.networkResponse == null ||//absolute no network.
-								(e.networkResponse != null && e.networkResponse.statusCode != HttpStatus.SC_OK)//online but some problems.
+								(e.networkResponse != null && e.networkResponse.statusCode != 200)//online but some problems.
 								) {
 							openStickyBanner(context, false);
 						}
@@ -338,9 +337,9 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 				if (networkResponse != null) {
 					/*Online errors.*/
 					switch (networkResponse.statusCode) {
-						case HttpStatus.SC_FORBIDDEN:
-						case HttpStatus.SC_MOVED_TEMPORARILY:
-						case HttpStatus.SC_SERVICE_UNAVAILABLE:
+						case 403:
+						case 302:
+						case 503:
 							errTv.setText(R.string.meta_server_old_black);
 							break;
 						default:
@@ -376,9 +375,9 @@ public final class ErrorHandler implements Animation.AnimationListener, View.OnC
 			if (networkResponse != null) {
 				/*Online errors.*/
 				switch (networkResponse.statusCode) {
-					case HttpStatus.SC_FORBIDDEN:
-					case HttpStatus.SC_MOVED_TEMPORARILY:
-					case HttpStatus.SC_SERVICE_UNAVAILABLE:
+					case 403:
+					case 302:
+					case 503:
 						msg = context.getString(R.string.meta_server_black);
 						break;
 					default:
