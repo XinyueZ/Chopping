@@ -19,7 +19,9 @@ public final class InstalledAppReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		//Info UI to refresh button status.
 		Uri data = intent.getData();
-		String packageName = data.getSchemeSpecificPart();
-		EventBus.getDefault().post(new ExternalAppChangedEvent(packageName));
+		if(data != null) {
+			String packageName = data.getSchemeSpecificPart();
+			EventBus.getDefault().post(new ExternalAppChangedEvent(packageName));
+		}
 	}
 }
