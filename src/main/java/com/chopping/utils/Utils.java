@@ -310,4 +310,15 @@ public final class Utils {
 		}
 		return null;
 	}
+
+	/**
+	 *Share information by calling standards of system.
+	 */
+	public static Intent getShareInformation(String subject, String body) {
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.setType("text/plain");
+		i.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+		i.putExtra(android.content.Intent.EXTRA_TEXT, body);
+		return i;
+	}
 }
