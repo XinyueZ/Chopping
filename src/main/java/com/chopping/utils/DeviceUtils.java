@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -334,7 +335,8 @@ public final class DeviceUtils {
 	 * @param cxt {@link android.content.Context}.
 	 */
 	public static void turnGPSOn(Context  cxt) {
-		String provider = Settings.Secure.getString(cxt.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		String provider = Settings.Secure.getString(cxt.getContentResolver(),
+				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 		if(!provider.contains("gps")&&
 				android.os.Build.VERSION.SDK_INT < VERSION_CODES.KITKAT) { //if gps is enabled
 			Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
@@ -373,5 +375,35 @@ public final class DeviceUtils {
 			poke.setData(Uri.parse("3"));
 			cxt.sendBroadcast(poke);
 		}
+	}
+
+
+	/**
+	 * This method converts device specific pixels to density independent pixels.
+	 *
+	 * @param context Context to get resources and device specific display metrics
+	 * @param px A value in px (pixels) unit. Which we need to convert into db
+	 * @return A float value to represent dp equivalent to px value
+	 */
+	public static float px2dp( Context context, float px){
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float dp = px / (metrics.densityDpi / 160f);
+		return dp;
+	}
+
+
+	/**
+	 * This method converts dp unit to equivalent pixels, depending on device density.
+	 *
+	 * @param context Context to get resources and device specific display metrics
+	 * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+	 * @return A float value to represent px equivalent to dp depending on device density
+	 */
+	public static float dp2px(Context context, float dp ){
+		Resources resources = context.getResources();
+		DisplayMetrics metrics = resources.getDisplayMetrics();
+		float px = dp * (metrics.densityDpi / 160f);
+		return px;
 	}
 }
