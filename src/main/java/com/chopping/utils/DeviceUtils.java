@@ -7,11 +7,13 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.os.Build.VERSION_CODES;
 import android.os.PowerManager;
 import android.provider.Settings;
@@ -405,5 +407,15 @@ public final class DeviceUtils {
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		float px = dp * (metrics.densityDpi / 160f);
 		return px;
+	}
+
+	/**
+	 *
+	 * Is device plugged in or not.
+	 */
+	public static boolean isPlugged(Context context) {
+		Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+		int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+		return plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB;
 	}
 }
