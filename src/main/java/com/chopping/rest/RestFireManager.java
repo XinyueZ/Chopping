@@ -3,6 +3,8 @@ package com.chopping.rest;
 import android.app.Application;
 import android.util.Log;
 
+import com.chopping.bus.AuthenticatedEvent;
+import com.chopping.bus.AuthenticationErrorEvent;
 import com.firebase.client.AuthData;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -10,8 +12,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.Firebase.AuthResultHandler;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
-import com.chopping.bus.AuthenticatedEvent;
-import com.chopping.bus.AuthenticationErrorEvent;
 
 import de.greenrobot.event.EventBus;
 
@@ -68,7 +68,8 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		Firebase.setAndroidContext( app );
 		mFirebase = new Firebase( mUrl );
 		mFirebase.keepSynced( true );
-		mQuery = mFirebase.orderByChild( mOrderBy ).limitToLast( mLastLimit );
+		mQuery = mFirebase.orderByChild( mOrderBy )
+						  .limitToLast( mLastLimit );
 		mFirebase.authWithCustomToken(
 				mAuth,
 				this
@@ -139,6 +140,35 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		mFirebase.push();
 	}
 
+
+	/**
+	 * Delete data on Firebase.
+	 *
+	 * @param data
+	 * 		{@link RestObject} to delete on Firebase.
+	 */
+	public void delete( RestObject data ) {
+		if( !mAddedListener ) {
+			mQuery.addChildEventListener( this );
+			mAddedListener = true;
+		}
+		deleteInBackground( data );
+	}
+
+	/**
+	 * Delete data on Firebase in background, call this in thread.
+	 *
+	 * @param data
+	 * 		{@link RestObject} to delete on Firebase.
+	 */
+	public void deleteInBackground( final RestObject data ) {
+		mRespType = data.getClass();
+		data.updateDB( RestObject.DELETE );
+		mFirebase.child( data.getReqId() )
+				 .removeValue();
+	}
+
+
 	/**
 	 * Get all data from Firebase of type {@code respType}.
 	 *
@@ -161,8 +191,11 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	 * @param exp
 	 * 		{@link Application} context.
 	 */
-	public void executePending( ExecutePending exp ) {
-		RestUtils.executePending( exp );
+	public void executePending( ExecutePending exp, int statusBefore ) {
+		RestUtils.executePending(
+				exp,
+				statusBefore
+		);
 	}
 
 	//[ChildEventListener]
@@ -182,10 +215,8 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 
 	@Override
 	public void onChildRemoved( DataSnapshot dataSnapshot ) {
-		Log.d(
-				getClass().getSimpleName(),
-				"onChildRemoved: " + dataSnapshot.getValue()
-		);
+		RestObject serverData = dataSnapshot.getValue( mRespType );
+		serverData.updateDB( RestObject.DELETE_SYNCED );
 	}
 
 	@Override

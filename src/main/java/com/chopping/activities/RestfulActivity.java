@@ -18,7 +18,7 @@ import io.realm.Sort;
  *
  * @author Xinyue Zhao
  */
-public abstract class RestfulActivity<C extends Class<? extends RealmObject>> extends AppCompatActivity {
+public abstract class RestfulActivity extends AppCompatActivity {
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -49,10 +49,10 @@ public abstract class RestfulActivity<C extends Class<? extends RealmObject>> ex
 	};
 
 	private void load() {
+		sendPending();
 		if( !RestUtils.shouldLoadLocal( getApplication()) ) {
 			loadList();
 		}
-		sendPending();
 	}
 
 

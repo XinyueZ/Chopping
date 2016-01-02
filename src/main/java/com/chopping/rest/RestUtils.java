@@ -52,6 +52,11 @@ public final class RestUtils {
 																"status",
 																RestObject.NOT_SYNCED
 														)
+														.or()
+														.equalTo(
+																"status",
+																RestObject.DELETE
+														)
 														.findAll();
 		db.beginTransaction();
 		results.clear();
@@ -87,14 +92,16 @@ public final class RestUtils {
 	 *
 	 * @param exp
 	 * 		{@link ExecutePending} to execute pending.
+	 * @param statusBefore
+	 * 		Status of sync.
 	 */
-	public static void executePending( ExecutePending exp ) {
+	public static void executePending( ExecutePending exp, int statusBefore ) {
 		Realm db = Realm.getDefaultInstance();
 		RealmResults<? extends RealmObject> notSyncItems = db.where( exp.build()
 																		.DBType() )
 															 .equalTo(
 																	 "status",
-																	 RestObject.NOT_SYNCED
+																	 statusBefore
 															 )
 															 .findAllSorted(
 																	 "reqTime",

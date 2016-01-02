@@ -38,7 +38,7 @@ public class RestApiManager {
 	}
 
 	/**
-	 * Run a rest request async.
+	 * Run a rest request for non-delete or update async.
 	 *
 	 * @param call
 	 * 		The {@link Call} to the request.
@@ -46,8 +46,47 @@ public class RestApiManager {
 	 * 		The request data to post on server.
 	 */
 	public <LD extends RestObject, SD extends RestObject> void execAsync( Call<SD> call, LD requestObject ) {
+		execAsync(
+				call,
+				requestObject,
+				RestObject.NOT_SYNCED,
+				RestObject.SYNCED
+		);
+	}
+
+	/**
+	 * Run a rest request for delete async.
+	 *
+	 * @param call
+	 * 		The {@link Call} to the request.
+	 * @param requestObject
+	 * 		The request data to post on server.
+	 */
+	public <LD extends RestObject, SD extends RestObject> void deleteAsync( Call<SD> call, LD requestObject ) {
+		execAsync(
+				call,
+				requestObject,
+				RestObject.DELETE,
+				RestObject.DELETE_SYNCED
+		);
+	}
+
+	/**
+	 * Run a rest request async.
+	 *
+	 * @param call
+	 * 		The {@link Call} to the request.
+	 * @param requestObject
+	 * 		The request data to post on server.
+	 * @param statusBefore
+	 * 		The status of begin request.
+	 * @param statusAfter
+	 * 		The status of after request.
+	 */
+	public <LD extends RestObject, SD extends RestObject> void execAsync( Call<SD> call, LD requestObject, int statusBefore, final int statusAfter
+	) {
 		//MAKE A LOCAL STATUS.
-		requestObject.updateDB( RestObject.NOT_SYNCED );
+		requestObject.updateDB( statusBefore );
 		//CALL API.
 		call.enqueue( new Callback<SD>() {
 			@Override
@@ -58,7 +97,7 @@ public class RestApiManager {
 					//-------------------------
 					RestObject serverData = response.body();
 					//UPDATE LOCAL STATUS.
-					serverData.updateDB( RestObject.SYNCED );
+					serverData.updateDB( statusAfter );
 				}
 			}
 
@@ -75,7 +114,7 @@ public class RestApiManager {
 
 
 	/**
-	 * Run a rest request sync.
+	 * Run a rest request for non-delete or update sync.
 	 *
 	 * @param call
 	 * 		The {@link Call} to the request.
@@ -83,8 +122,46 @@ public class RestApiManager {
 	 * 		The request data to post on server.
 	 */
 	public <LD extends RestObject, SD extends RestObject> void execSync( Call<SD> call, LD requestObject ) {
+		execSync(
+				call,
+				requestObject,
+				RestObject.NOT_SYNCED,
+				RestObject.SYNCED
+		);
+	}
+
+	/**
+	 * Run a rest request for delete sync.
+	 *
+	 * @param call
+	 * 		The {@link Call} to the request.
+	 * @param requestObject
+	 * 		The request data to post on server.
+	 */
+	public <LD extends RestObject, SD extends RestObject> void deleteSync( Call<SD> call, LD requestObject ) {
+		execSync(
+				call,
+				requestObject,
+				RestObject.DELETE,
+				RestObject.DELETE_SYNCED
+		);
+	}
+
+	/**
+	 * Run a rest request sync.
+	 *
+	 * @param call
+	 * 		The {@link Call} to the request.
+	 * @param requestObject
+	 * 		The request data to post on server.
+	 * @param statusBefore
+	 * 		The status of begin request.
+	 * @param statusAfter
+	 * 		The status of after request.
+	 */
+	public <LD extends RestObject, SD extends RestObject> void execSync( Call<SD> call, LD requestObject, int statusBefore, int statusAfter ) {
 		//MAKE A LOCAL STATUS.
-		requestObject.updateDB( RestObject.NOT_SYNCED );
+		requestObject.updateDB( statusBefore );
 		try {
 			//CALL API.
 			Response<SD> response = call.execute();
@@ -94,7 +171,7 @@ public class RestApiManager {
 				//-------------------------
 				RestObject serverData = response.body();
 				//UPDATE LOCAL STATUS.
-				serverData.updateDB( RestObject.SYNCED );
+				serverData.updateDB( statusAfter );
 			}
 		} catch( IOException e ) {
 			Log.e(
@@ -105,7 +182,7 @@ public class RestApiManager {
 		}
 	}
 
-	public void executePending( ExecutePending exp ) {
-		RestUtils.executePending( exp );
+	public void executePending( ExecutePending exp, int statusBefore ) {
+		RestUtils.executePending( exp, statusBefore );
 	}
 }

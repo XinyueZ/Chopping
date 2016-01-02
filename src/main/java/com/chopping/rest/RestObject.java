@@ -8,8 +8,10 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 
 public abstract class RestObject {
-	public static final int NOT_SYNCED = 0;
-	public static final int SYNCED     = 1;
+	public static final int NOT_SYNCED    = 0;
+	public static final int SYNCED        = 1;
+	public static final int DELETE        = 2;
+	public static final int DELETE_SYNCED = 3;
 
 	//Request ID --> must be "reqId" for json/gson/jackson.
 	public abstract String getReqId();
@@ -26,7 +28,14 @@ public abstract class RestObject {
 				status
 		);
 		for( RealmObject instance : instances ) {
-			db.copyToRealmOrUpdate( instance );
+			switch( status ) {
+				case DELETE_SYNCED:
+					instance.removeFromRealm();
+					break;
+				default:
+					db.copyToRealmOrUpdate( instance );
+					break;
+			}
 		}
 		db.commitTransaction();
 		if( !db.isClosed() ) {
