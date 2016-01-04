@@ -72,6 +72,23 @@ public class RestApiManager {
 	}
 
 	/**
+	 * Run a rest request for update async.
+	 *
+	 * @param call
+	 * 		The {@link Call} to the request.
+	 * @param requestObject
+	 * 		The request data to post on server.
+	 */
+	public <LD extends RestObject, SD extends RestObject> void updateAsync( Call<SD> call, LD requestObject ) {
+		execAsync(
+				call,
+				requestObject,
+				RestObject.UPDATE,
+				RestObject.UPDATE_SYNCED
+		);
+	}
+
+	/**
 	 * Run a rest request async.
 	 *
 	 * @param call
@@ -144,6 +161,24 @@ public class RestApiManager {
 				requestObject,
 				RestObject.DELETE,
 				RestObject.DELETE_SYNCED
+		);
+	}
+
+
+	/**
+	 * Run a rest request for update sync.
+	 *
+	 * @param call
+	 * 		The {@link Call} to the request.
+	 * @param requestObject
+	 * 		The request data to post on server.
+	 */
+	public <LD extends RestObject, SD extends RestObject> void updateSync( Call<SD> call, LD requestObject ) {
+		execSync(
+				call,
+				requestObject,
+				RestObject.UPDATE,
+				RestObject.UPDATE_SYNCED
 		);
 	}
 

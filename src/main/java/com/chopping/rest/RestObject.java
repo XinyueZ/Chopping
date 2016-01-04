@@ -1,17 +1,21 @@
 package com.chopping.rest;
 
 
+import java.io.Serializable;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
 
-public abstract class RestObject {
-	public static final int NOT_SYNCED    = 0;
-	public static final int SYNCED        = 1;
-	public static final int DELETE        = 2;
-	public static final int DELETE_SYNCED = 3;
+public abstract class RestObject implements Serializable {
+	public static final int NOT_SYNCED     = 0;
+	public static final int SYNCED         = 1;
+	public static final int DELETE         = 2;
+	public static final int DELETE_SYNCED  = 3;
+	public static final int UPDATE         = 4;
+	public static final int UPDATE_SYNCED = 5;
 
 	//Request ID --> must be "reqId" for json/gson/jackson.
 	public abstract String getReqId();

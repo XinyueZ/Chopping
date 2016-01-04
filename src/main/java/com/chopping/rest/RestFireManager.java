@@ -161,11 +161,39 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	 * @param data
 	 * 		{@link RestObject} to delete on Firebase.
 	 */
-	public void deleteInBackground( final RestObject data ) {
+	public void deleteInBackground( RestObject data ) {
 		mRespType = data.getClass();
 		data.updateDB( RestObject.DELETE );
 		mFirebase.child( data.getReqId() )
 				 .removeValue();
+	}
+
+
+	/**
+	 * Change data on Firebase.
+	 *
+	 * @param data
+	 * 		{@link RestObject} to change on Firebase.
+	 */
+	public void update( RestObject data ) {
+		if( !mAddedListener ) {
+			mQuery.addChildEventListener( this );
+			mAddedListener = true;
+		}
+		updateInBackground( data );
+	}
+
+	/**
+	 * Change data on Firebase in background, call this in thread.
+	 *
+	 * @param data
+	 * 		{@link RestObject} to change on Firebase.
+	 */
+	public void updateInBackground( RestObject data ) {
+		mRespType = data.getClass();
+		data.updateDB( RestObject.UPDATE );
+		mFirebase.child( data.getReqId() )
+				 .setValue( data );
 	}
 
 
@@ -206,18 +234,17 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	}
 
 	@Override
-	public void onChildChanged( DataSnapshot dataSnapshot, String s ) {
-		Log.d(
-				getClass().getSimpleName(),
-				"onChildChanged: " + dataSnapshot.getValue()
-		);
-	}
-
-	@Override
 	public void onChildRemoved( DataSnapshot dataSnapshot ) {
 		RestObject serverData = dataSnapshot.getValue( mRespType );
 		serverData.updateDB( RestObject.DELETE_SYNCED );
 	}
+
+	@Override
+	public void onChildChanged( DataSnapshot dataSnapshot, String s ) {
+		RestObject serverData = dataSnapshot.getValue( mRespType );
+		serverData.updateDB( RestObject.UPDATE_SYNCED );
+	}
+
 
 	@Override
 	public void onChildMoved( DataSnapshot dataSnapshot, String s ) {
