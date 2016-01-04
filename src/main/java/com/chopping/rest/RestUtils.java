@@ -2,6 +2,7 @@ package com.chopping.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -12,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 
+import com.chopping.application.LL;
 import com.chopping.utils.NetworkUtils;
 
 import io.realm.Realm;
@@ -47,19 +49,35 @@ public final class RestUtils {
 	 */
 	public static void clearPending( Class<? extends RealmObject> clazz ) {
 		Realm db = Realm.getDefaultInstance();
-		RealmResults<? extends RealmObject> results = db.where( clazz )
+		RealmResults<? extends RealmObject> notSyncedResults = db.where( clazz )
 														.equalTo(
 																"status",
 																RestObject.NOT_SYNCED
 														)
-														.or()
-														.equalTo(
-																"status",
-																RestObject.DELETE
-														)
 														.findAll();
+		RealmResults<? extends RealmObject> wantDeleteResults = db.where( clazz )
+																 .equalTo(
+																		 "status",
+																		 RestObject.DELETE
+																 )
+																 .findAll();
 		db.beginTransaction();
-		results.clear();
+		notSyncedResults.clear();
+
+		List<? extends RealmObject> delRes = new ArrayList<>( wantDeleteResults );
+		for(RealmObject deleted : delRes){
+			try {
+				Class cls = Class.forName(clazz.getName());
+				Method setMethod      = cls.getMethod(  "setStatus", Integer.TYPE );
+				setMethod.invoke(
+						deleted,
+						RestObject.SYNCED
+				);
+			} catch( Exception ex ) {
+				LL.e( ex.toString() );
+			}
+			db.copyToRealmOrUpdate( deleted );
+		}
 		db.commitTransaction();
 
 		if( !db.isClosed() ) {
