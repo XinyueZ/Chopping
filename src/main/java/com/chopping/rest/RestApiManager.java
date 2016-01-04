@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import android.util.Log;
 
+import com.chopping.utils.RestUtils;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;

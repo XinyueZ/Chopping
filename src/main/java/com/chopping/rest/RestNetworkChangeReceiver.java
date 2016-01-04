@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.chopping.bus.UpdateNetworkStatusEvent;
+import com.chopping.utils.RestUtils;
 
 import de.greenrobot.event.EventBus;
 

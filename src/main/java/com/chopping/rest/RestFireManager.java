@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.chopping.bus.AuthenticatedEvent;
 import com.chopping.bus.AuthenticationErrorEvent;
+import com.chopping.utils.RestUtils;
 import com.firebase.client.AuthData;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;

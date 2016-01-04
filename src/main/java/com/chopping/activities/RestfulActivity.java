@@ -3,7 +3,7 @@ package com.chopping.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.chopping.rest.RestUtils;
+import com.chopping.utils.RestUtils;
 import com.chopping.bus.UpdateNetworkStatusEvent;
 
 import de.greenrobot.event.EventBus;

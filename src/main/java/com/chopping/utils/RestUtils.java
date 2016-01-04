@@ -1,4 +1,4 @@
-package com.chopping.rest;
+package com.chopping.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,8 @@ import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 
 import com.chopping.application.LL;
-import com.chopping.utils.NetworkUtils;
+import com.chopping.rest.ExecutePending;
+import com.chopping.rest.RestObject;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -42,7 +43,7 @@ public final class RestUtils {
 	}
 
 	/**
-	 * Delete all pending objects that might not be synced.
+	 * Delete all pending objects that might not be synced, for "add", "Delete" only.
 	 *
 	 * @param clazz
 	 * 		The meta of object.
@@ -128,7 +129,7 @@ public final class RestUtils {
 		List<RestObject> restObjects = new ArrayList<>();
 		for( RealmObject item : notSyncItems ) {
 			restObjects.add( exp.build()
-								.fromDB( item ) );
+								.newFromDB( item ) );
 		}
 		if( !db.isClosed() ) {
 			db.close();

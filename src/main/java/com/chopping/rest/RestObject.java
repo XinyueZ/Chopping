@@ -56,7 +56,7 @@ public abstract class RestObject implements Serializable {
 
 	public
 	@Nullable
-	RestObject fromDB( RealmObject dbItem ) {
+	RestObject newFromDB( RealmObject dbItem ) {
 		return null;
 	}
 }
