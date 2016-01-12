@@ -1,6 +1,7 @@
 package com.chopping.rest;
 
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.chopping.bus.AuthenticatedEvent;
@@ -58,6 +59,22 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		mOrderBy = orderBy;
 	}
 
+
+
+	/**
+	 * Constructor of {@link RestFireManager}
+	 *
+	 * @param url
+	 * 		The base-url to used Firebase.
+	 * @param auth
+	 * 		The auth-info to used Firebase.
+	 * @param lastLimit
+	 * 		The last-limit data of data.
+	 */
+	public RestFireManager( String url, String auth, int lastLimit    ) {
+		this(url, auth, lastLimit, null);
+	}
+
 	/**
 	 * Initialize the manager.
 	 *
@@ -69,8 +86,10 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		Firebase.setAndroidContext( app );
 		mFirebase = new Firebase( mUrl );
 		mFirebase.keepSynced( true );
-		mQuery = mFirebase.orderByChild( mOrderBy )
-						  .limitToLast( mLastLimit );
+		mQuery = mFirebase.limitToLast( mLastLimit );
+		if( !TextUtils.isEmpty( mOrderBy ) ) {
+			mQuery = mQuery.orderByChild( mOrderBy );
+		}
 		mFirebase.authWithCustomToken(
 				mAuth,
 				this
