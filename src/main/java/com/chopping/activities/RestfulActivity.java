@@ -1,6 +1,9 @@
 package com.chopping.activities;
 
+import java.util.Set;
+
 import android.os.Bundle;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 
 import com.chopping.utils.RestUtils;
@@ -10,6 +13,7 @@ import de.greenrobot.event.EventBus;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -48,6 +52,7 @@ public abstract class RestfulActivity extends AppCompatActivity {
 		}
 	};
 
+
 	private void load() {
 		sendPending();
 		if( !RestUtils.shouldLoadLocal( getApplication()) ) {
@@ -58,9 +63,25 @@ public abstract class RestfulActivity extends AppCompatActivity {
 
 	protected abstract void initDataBinding();
 
+	protected void initRestUI( ArrayMap<String, String> valueContains) {
+		RealmQuery<? extends RealmObject> q = mRealm.where( getDataClazz() );
+		Set<String> keys = valueContains.keySet();
+		for(String key : keys) {
+			q.contains( key, valueContains.get( key ) );
+		}
+		mRealmData = q.findAllSortedAsync(
+								   "reqTime",
+								   Sort.DESCENDING
+						   );
+		mRealmData.addChangeListener( mListListener );
+		if( RestUtils.shouldLoadLocal( getApplication() ) ) {
+			buildRestUI();
+		}
+	}
+
 	protected void initRestUI() {
 		mRealmData = mRealm.where( getDataClazz() )
-						   .findAllSorted(
+						   .findAllSortedAsync(
 								   "reqTime",
 								   Sort.DESCENDING
 						   );
@@ -88,6 +109,8 @@ public abstract class RestfulActivity extends AppCompatActivity {
 	protected RealmResults<? extends RealmObject> getData() {
 		return mRealmData;
 	}
+
+
 
 	protected boolean isDataLoaded() {
 		return mRealmData.isLoaded();

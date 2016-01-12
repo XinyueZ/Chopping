@@ -214,6 +214,8 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		mAddedListener = true;
 	}
 
+
+
 	/**
 	 * Do pending request.
 	 *
