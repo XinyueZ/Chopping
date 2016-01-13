@@ -58,7 +58,7 @@ public abstract class RestfulActivity extends AppCompatActivity {
 	private RealmChangeListener mListListener = new RealmChangeListener() {
 		@Override
 		public void onChange() {
-			buildRestUI();
+			buildViews();
 		}
 	};
 
@@ -74,7 +74,7 @@ public abstract class RestfulActivity extends AppCompatActivity {
 	protected abstract void initDataBinding();
 
 
-	protected void initRestUI() {
+	protected void queryLocalData() {
 		RealmQuery<? extends RealmObject> query = mRealm.where( getDataClazz() );
 		buildQuery(query);
 		mRealmData = query.findAllSortedAsync(
@@ -84,7 +84,7 @@ public abstract class RestfulActivity extends AppCompatActivity {
 		mRealmData.removeChangeListeners();
 		mRealmData.addChangeListener( mListListener );
 		if( RestUtils.shouldLoadLocal( getApplication() ) ) {
-			buildRestUI();
+			buildViews();
 		}
 	}
 
@@ -98,7 +98,7 @@ public abstract class RestfulActivity extends AppCompatActivity {
 
 	protected abstract void loadList();
 
-	protected abstract void buildRestUI();
+	protected abstract void buildViews();
 
 	/**
 	 * Callback when event of network status changed and connection is connected.
@@ -141,7 +141,7 @@ public abstract class RestfulActivity extends AppCompatActivity {
 		super.onCreate( savedInstanceState );
 		mRealm = Realm.getDefaultInstance();
 		initDataBinding();
-		initRestUI();
+		queryLocalData();
 		load();
 	}
 
