@@ -86,7 +86,7 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		Firebase.setAndroidContext( app );
 		mFirebase = new Firebase( mUrl );
 		mFirebase.keepSynced( true );
-		mQuery = mFirebase.limitToLast( mLastLimit );
+		mQuery = mFirebase.limitToFirst( mLastLimit );
 		if( !TextUtils.isEmpty( mOrderBy ) ) {
 			mQuery = mQuery.orderByChild( mOrderBy );
 		}

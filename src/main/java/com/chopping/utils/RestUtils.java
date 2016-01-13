@@ -164,7 +164,7 @@ public final class RestUtils {
 					prop.load( input );
 					String url       = prop.getProperty( "firebase_url" );
 					String auth      = prop.getProperty( "firebase_auth" );
-					String limitLast = prop.getProperty( "firebase_standard_last_limit" );
+					String limitLast = prop.getProperty( "firebase_standard_limit" );
 					return new String[] { url , auth , limitLast };
 				}
 			} catch( IOException ex ) {
