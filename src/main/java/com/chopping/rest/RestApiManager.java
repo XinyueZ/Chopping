@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import android.util.Log;
 
+import com.chopping.bus.RestApiResponseEvent;
 import com.chopping.utils.RestUtils;
 
+import de.greenrobot.event.EventBus;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -117,6 +119,7 @@ public class RestApiManager {
 					RestObject serverData = response.body();
 					//UPDATE LOCAL STATUS.
 					serverData.updateDB( statusAfter );
+					EventBus.getDefault().post( new RestApiResponseEvent( true ) );
 				}
 			}
 
@@ -127,6 +130,7 @@ public class RestApiManager {
 						"onFailure: " + t.toString()
 
 				);
+				EventBus.getDefault().post( new RestApiResponseEvent( false ) );
 			}
 		} );
 	}
