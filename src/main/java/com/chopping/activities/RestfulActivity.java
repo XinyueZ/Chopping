@@ -147,10 +147,10 @@ public abstract class RestfulActivity extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
-		if( mRealmData != null && mListListener != null ) {
+		if( mRealmData != null   ) {
 			mRealmData.removeChangeListener( mListListener );
 		}
-		if( mRealm != null && !mRealm.isClosed() ) {
+		if( mRealm != null  ) {
 			mRealm.close();
 		}
 		super.onDestroy();
