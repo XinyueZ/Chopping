@@ -8,10 +8,9 @@ import com.chopping.bus.RestApiResponseEvent;
 import com.chopping.utils.RestUtils;
 
 import de.greenrobot.event.EventBus;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -111,7 +110,7 @@ public class RestApiManager {
 		//CALL API.
 		call.enqueue( new Callback<SD>() {
 			@Override
-			public void onResponse( Response<SD> response, Retrofit retrofit ) {
+			public void onResponse( Response<SD> response ) {
 				if( response.isSuccess() ) {
 					//-------------------------
 					//THE REQUEST IS SUCCESS.
@@ -119,8 +118,8 @@ public class RestApiManager {
 					RestObject serverData = response.body();
 					//UPDATE LOCAL STATUS.
 					serverData.updateDB( statusAfter );
-					EventBus.getDefault().post( new RestApiResponseEvent( true ) );
 				}
+				EventBus.getDefault().post( new RestApiResponseEvent( true ) );
 			}
 
 			@Override

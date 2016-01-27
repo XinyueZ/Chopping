@@ -73,14 +73,17 @@ public abstract class RestfulActivity extends AppCompatActivity {
 
 	protected abstract void initDataBinding();
 
+	protected   RealmResults<? extends RealmObject> createQuery( RealmQuery<? extends RealmObject> q ) {
+		return q.findAllSortedAsync(
+				"reqTime",
+				Sort.DESCENDING
+		);
+	}
 
 	protected void queryLocalData() {
 		RealmQuery<? extends RealmObject> query = mRealm.where( getDataClazz() );
 		buildQuery(query);
-		mRealmData = query.findAllSortedAsync(
-								   "reqTime",
-								   Sort.DESCENDING
-						   );
+		mRealmData = createQuery(query);
 		mRealmData.removeChangeListeners();
 		mRealmData.addChangeListener( mListListener );
 		if( RestUtils.shouldLoadLocal( getApplication() ) ) {
