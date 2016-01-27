@@ -118,8 +118,8 @@ public class RestApiManager {
 					RestObject serverData = response.body();
 					//UPDATE LOCAL STATUS.
 					serverData.updateDB( statusAfter );
-					EventBus.getDefault().post( new RestApiResponseEvent( true ) );
 				}
+				EventBus.getDefault().post( new RestApiResponseEvent( true ) );
 			}
 
 			@Override

@@ -17,11 +17,13 @@ public abstract class RestObject implements Serializable {
 	public static final int UPDATE         = 4;
 	public static final int UPDATE_SYNCED = 5;
 
+
 	//Request ID --> must be "reqId" for json/gson/jackson.
 	public abstract String getReqId();
 
 	//Time to fire the request --> must be "reqTime" for json/gson/jackson.
 	public abstract long getReqTime();
+
 
 	//Update database when this object changed.
 	public void updateDB( int status ) {
