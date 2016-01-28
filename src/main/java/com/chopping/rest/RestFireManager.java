@@ -28,7 +28,7 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	private String                      mAuth;
 	private Firebase                    mFirebase;
 	private Query                       mQuery;
-	private int                         mLastLimit;
+	private int                         mLimit;
 	private String                      mOrderBy;
 	private Class<? extends RestObject> mRespType;
 	/**
@@ -47,18 +47,17 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	 * 		The base-url to used Firebase.
 	 * @param auth
 	 * 		The auth-info to used Firebase.
-	 * @param lastLimit
+	 * @param limit
 	 * 		The last-limit data of data.
 	 * @param orderBy
 	 * 		Order by some keys.
 	 */
-	public RestFireManager( String url, String auth, int lastLimit, String orderBy ) {
+	public RestFireManager( String url, String auth, int limit, String orderBy ) {
 		mUrl = url;
 		mAuth = auth;
-		mLastLimit = lastLimit;
+		mLimit = limit;
 		mOrderBy = orderBy;
 	}
-
 
 
 	/**
@@ -68,11 +67,16 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	 * 		The base-url to used Firebase.
 	 * @param auth
 	 * 		The auth-info to used Firebase.
-	 * @param lastLimit
+	 * @param limit
 	 * 		The last-limit data of data.
 	 */
-	public RestFireManager( String url, String auth, int lastLimit    ) {
-		this(url, auth, lastLimit, null);
+	public RestFireManager( String url, String auth, int limit ) {
+		this(
+				url,
+				auth,
+				limit,
+				null
+		);
 	}
 
 	/**
@@ -86,7 +90,7 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		Firebase.setAndroidContext( app );
 		mFirebase = new Firebase( mUrl );
 		mFirebase.keepSynced( true );
-		mQuery = mFirebase.limitToFirst( mLastLimit );
+		mQuery = mFirebase.limitToLast( mLimit );
 		if( !TextUtils.isEmpty( mOrderBy ) ) {
 			mQuery = mQuery.orderByChild( mOrderBy );
 		}
@@ -218,7 +222,7 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 
 
 	/**
-	 * Get all data from Firebase of type {@code respType}.
+	 * Get all data from Firebase of type {@code respType} with {@link #mLimit}.
 	 *
 	 * @param respType
 	 * 		Server data type {@code respType}.
@@ -233,6 +237,53 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		mAddedListener = true;
 	}
 
+	/**
+	 * Get all data from Firebase of type {@code respType} with {@link #mLimit} start at {@code startAt} on {@code property}.
+	 *
+	 * @param respType
+	 * 		Server data type {@code respType}.
+	 * @param property
+	 * 		Property on {@code respType} to compare.
+	 * @param startAt
+	 * 		Value of {@code property} from which to start.
+	 */
+	public void selectAll( Class<? extends RestObject> respType, String property, String startAt ) {
+		mRespType = respType;
+		if( mAddedListener ) {
+			mQuery.removeEventListener( this );
+			mAddedListener = false;
+		}
+		mQuery = mFirebase.orderByChild( property )
+						  .startAt( startAt )
+						  .limitToFirst( mLimit );
+		mQuery.addChildEventListener( this );
+		mAddedListener = true;
+	}
+
+	/**
+	 * Get all data from Firebase of type {@code respType} with {@link #mLimit} start at {@code startAt} to {@code endAt} on {@code property}.
+	 *
+	 * @param respType
+	 * 		Server data type {@code respType}.
+	 * @param property
+	 * 		Property on {@code respType} to compare.
+	 * @param startAt
+	 * 		Value of {@code property} from which to start.
+	 * @param endAt
+	 * 		Value of {@code property} at which to end.
+	 */
+	public void selectAll( Class<? extends RestObject> respType, String property, String startAt, String endAt ) {
+		mRespType = respType;
+		if( mAddedListener ) {
+			mQuery.removeEventListener( this );
+			mAddedListener = false;
+		}
+		mQuery = mFirebase.orderByChild( property )
+						  .startAt( startAt )
+						  .endAt( endAt );
+		mQuery.addChildEventListener( this );
+		mAddedListener = true;
+	}
 
 
 	/**
