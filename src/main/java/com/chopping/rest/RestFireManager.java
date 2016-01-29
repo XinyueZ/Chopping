@@ -1,6 +1,8 @@
 package com.chopping.rest;
 
 import android.app.Application;
+import android.support.v4.util.ArrayMap;
+import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -39,6 +41,11 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	 * A flag to indicate whether listener of Firebase has been assigned or not.
 	 */
 	private boolean                     mAddedListener;
+	/**
+	 * Collection of Firebase keys associated with request-id.
+	 */
+	private SimpleArrayMap<String, String> mKeyList = new ArrayMap<>();
+
 
 	/**
 	 * Constructor of {@link RestFireManager}
@@ -237,50 +244,24 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 		mAddedListener = true;
 	}
 
-	/**
-	 * Get all data from Firebase of type {@code respType} with {@link #mLimit} start at {@code startAt} on {@code property}.
-	 *
-	 * @param respType
-	 * 		Server data type {@code respType}.
-	 * @param property
-	 * 		Property on {@code respType} to compare.
-	 * @param startAt
-	 * 		Value of {@code property} from which to start.
-	 */
-	public void selectAll( Class<? extends RestObject> respType, String property, String startAt ) {
-		mRespType = respType;
-		if( mAddedListener ) {
-			mQuery.removeEventListener( this );
-			mAddedListener = false;
-		}
-		mQuery = mFirebase.orderByChild( property )
-						  .startAt( startAt )
-						  .limitToFirst( mLimit );
-		mQuery.addChildEventListener( this );
-		mAddedListener = true;
-	}
 
 	/**
-	 * Get all data from Firebase of type {@code respType} with {@link #mLimit} start at {@code startAt} to {@code endAt} on {@code property}.
+	 * Get all data from {@code fromObject}.
 	 *
-	 * @param respType
-	 * 		Server data type {@code respType}.
-	 * @param property
-	 * 		Property on {@code respType} to compare.
-	 * @param startAt
-	 * 		Value of {@code property} from which to start.
-	 * @param endAt
-	 * 		Value of {@code property} at which to end.
+	 * @param fromObject
+	 * 		The object to start selection.
 	 */
-	public void selectAll( Class<? extends RestObject> respType, String property, String startAt, String endAt ) {
-		mRespType = respType;
+	public void selectFrom( RestObject fromObject ) {
+		mRespType = fromObject.getClass();
 		if( mAddedListener ) {
 			mQuery.removeEventListener( this );
 			mAddedListener = false;
 		}
-		mQuery = mFirebase.orderByChild( property )
-						  .startAt( startAt )
-						  .endAt( endAt );
+		String key = mKeyList.get( fromObject.getReqId() );
+		mQuery = mFirebase.endAt(
+				null,
+				key
+		).limitToLast( mLimit );
 		mQuery.addChildEventListener( this );
 		mAddedListener = true;
 	}
@@ -304,18 +285,59 @@ public class RestFireManager implements AuthResultHandler, ChildEventListener {
 	public void onChildAdded( DataSnapshot dataSnapshot, String s ) {
 		RestObject serverData = dataSnapshot.getValue( mRespType );
 		serverData.updateDB( RestObject.SYNCED );
+		if( !TextUtils.isEmpty( dataSnapshot.getKey() ) ) {
+			mKeyList.put(
+					serverData.getReqId(),
+					dataSnapshot.getKey()
+			);
+			Log.i(
+					"Fire Mgr",
+					"onChildAdded: <-" + dataSnapshot.getKey()
+			);
+			Log.i(
+					"Fire Mgr",
+					"onChildAdded: " + dataSnapshot.getKey()
+			);
+		}
 	}
 
 	@Override
 	public void onChildRemoved( DataSnapshot dataSnapshot ) {
 		RestObject serverData = dataSnapshot.getValue( mRespType );
+		String     reqId      = serverData.getReqId();
+		String      key = dataSnapshot.getKey();
 		serverData.updateDB( RestObject.DELETE_SYNCED );
+		if( !TextUtils.isEmpty( dataSnapshot.getKey() ) ) {
+			mKeyList.remove( reqId );
+			Log.i(
+					"Fire Mgr",
+					"onChildRemoved: ->" + dataSnapshot.getKey()
+			);
+			Log.i(
+					"Fire Mgr",
+					"onChildRemoved: " + key
+			);
+		}
 	}
 
 	@Override
 	public void onChildChanged( DataSnapshot dataSnapshot, String s ) {
 		RestObject serverData = dataSnapshot.getValue( mRespType );
 		serverData.updateDB( RestObject.UPDATE_SYNCED );
+		if( !TextUtils.isEmpty( dataSnapshot.getKey() ) ) {
+			mKeyList.put(
+					serverData.getReqId(),
+					dataSnapshot.getKey()
+			);
+			Log.i(
+					"Fire Mgr",
+					"onChildChanged: #" + dataSnapshot.getKey()
+			);
+			Log.i(
+					"Fire Mgr",
+					"onChildChanged: " + dataSnapshot.getKey()
+			);
+		}
 	}
 
 
