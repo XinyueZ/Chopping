@@ -1,13 +1,11 @@
 package com.chopping.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.chopping.bus.RestApiResponseEvent;
 import com.chopping.bus.UpdateNetworkStatusEvent;
 import com.chopping.utils.RestUtils;
 
-import de.greenrobot.event.EventBus;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
@@ -20,7 +18,7 @@ import io.realm.Sort;
  *
  * @author Xinyue Zhao
  */
-public abstract class RestfulActivity extends AppCompatActivity {
+public abstract class RestfulActivity extends BaseActivity {
 
 	//------------------------------------------------
 	//Subscribes, event-handlers
@@ -124,20 +122,6 @@ public abstract class RestfulActivity extends AppCompatActivity {
 
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		EventBus.getDefault()
-				.registerSticky( this );
-
-	}
-
-	@Override
-	protected void onPause() {
-		EventBus.getDefault()
-				.unregister( this );
-		super.onPause();
-	}
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {

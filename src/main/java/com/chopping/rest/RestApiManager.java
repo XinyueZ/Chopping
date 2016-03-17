@@ -110,7 +110,7 @@ public class RestApiManager {
 		//CALL API.
 		call.enqueue( new  Callback<SD>() {
 			@Override
-			public void onResponse( Response<SD> response  ) {
+			public void onResponse(Call<SD> call,  Response<SD> response  ) {
 				if( response.isSuccess() ) {
 					//-------------------------
 					//THE REQUEST IS SUCCESS.
@@ -123,7 +123,7 @@ public class RestApiManager {
 			}
 
 			@Override
-			public void onFailure( Throwable t ) {
+			public void onFailure( Call<SD> call, Throwable t ) {
 				Log.d(
 						getClass().getSimpleName(),
 						"onFailure: " + t.toString()
