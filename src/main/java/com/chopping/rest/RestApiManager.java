@@ -1,11 +1,11 @@
 package com.chopping.rest;
 
-import java.io.IOException;
-
 import android.util.Log;
 
 import com.chopping.bus.RestApiResponseEvent;
 import com.chopping.utils.RestUtils;
+
+import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -111,7 +111,7 @@ public class RestApiManager {
 		call.enqueue( new  Callback<SD>() {
 			@Override
 			public void onResponse(Call<SD> call,  Response<SD> response  ) {
-				if( response.isSuccess() ) {
+				if( response.isSuccessful() ) {
 					//-------------------------
 					//THE REQUEST IS SUCCESS.
 					//-------------------------
@@ -205,7 +205,7 @@ public class RestApiManager {
 		try {
 			//CALL API.
 			Response<SD> response = call.execute();
-			if( response.isSuccess() ) {
+			if( response.isSuccessful() ) {
 				//-------------------------
 				//THE REQUEST IS SUCCESS.
 				//-------------------------

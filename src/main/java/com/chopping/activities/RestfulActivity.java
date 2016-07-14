@@ -45,8 +45,11 @@ public abstract class RestfulActivity extends BaseActivity {
 	public void onEventMainThread( RestApiResponseEvent e ) {
 		if(e.isSuccess()) {
 			onRestApiSuccess();
+		} else {
+			onRestApiFail();
 		}
 	}
+
 
 	//------------------------------------------------
 
@@ -122,6 +125,9 @@ public abstract class RestfulActivity extends BaseActivity {
 
 	}
 
+
+	protected void onRestApiFail() {
+	}
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
