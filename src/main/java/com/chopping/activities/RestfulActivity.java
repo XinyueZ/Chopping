@@ -94,7 +94,7 @@ public abstract class RestfulActivity extends BaseActivity {
 	}
 
 	protected boolean shouldLoadLocal(Context cxt) {
-		RestUtils.shouldLoadLocal( cxt );
+		return RestUtils.shouldLoadLocal( cxt );
 	}
 
 	protected void buildQuery(RealmQuery<? extends RealmObject> q) {
