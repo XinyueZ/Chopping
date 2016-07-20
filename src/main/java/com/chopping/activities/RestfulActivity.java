@@ -1,5 +1,6 @@
 package com.chopping.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.chopping.bus.RestApiResponseEvent;
@@ -66,7 +67,7 @@ public abstract class RestfulActivity extends BaseActivity {
 
 	private void load() {
 		sendPending();
-		if( !RestUtils.shouldLoadLocal( getApplication()) ) {
+		if( !shouldLoadLocal(getApplication() ) ) {
 			loadList();
 		}
 	}
@@ -87,9 +88,13 @@ public abstract class RestfulActivity extends BaseActivity {
 		mRealmData = createQuery(query);
 		mRealmData.removeChangeListeners();
 		mRealmData.addChangeListener( mListListener );
-		if( RestUtils.shouldLoadLocal( getApplication() ) ) {
+		if( shouldLoadLocal(getApplication() ) ) {
 			buildViews();
 		}
+	}
+
+	protected boolean shouldLoadLocal(Context cxt) {
+		RestUtils.shouldLoadLocal( cxt );
 	}
 
 	protected void buildQuery(RealmQuery<? extends RealmObject> q) {

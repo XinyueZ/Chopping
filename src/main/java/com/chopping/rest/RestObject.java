@@ -1,10 +1,9 @@
 package com.chopping.rest;
 
 
-import java.io.Serializable;
-
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import java.io.Serializable;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -33,6 +32,10 @@ public abstract class RestObject implements Serializable {
 				db,
 				status
 		);
+		if(instances == null) {
+			db.cancelTransaction();
+			return;
+		}
 		for( RealmObject instance : instances ) {
 			switch( status ) {
 				case DELETE_SYNCED:
@@ -51,7 +54,7 @@ public abstract class RestObject implements Serializable {
 
 	//Create database items that will be updated into database.
 	protected abstract
-	@NonNull
+	@Nullable
 	RealmObject[] newInstances( Realm db, int status );
 
 	public abstract Class<? extends RealmObject> DBType();
