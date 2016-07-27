@@ -1,16 +1,7 @@
 package com.chopping.utils;
 
-import java.math.BigInteger;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Enumeration;
-import java.util.Map;
-
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -20,6 +11,16 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
 import com.chopping.application.LL;
+
+import java.math.BigInteger;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * Utils for network.
@@ -194,7 +195,14 @@ public final class NetworkUtils {
 	 * @param _context A context object.
 	 */
 	public static void openNetworkSetting(Context _context) {
-		_context.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+		try {
+			Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			_context.startActivity(intent);
+		}
+		catch (ActivityNotFoundException e){
+			_context.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+		}
 	}
 
 	/**
