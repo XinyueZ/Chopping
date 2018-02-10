@@ -17,6 +17,11 @@ android {
 
     //This will be required to use the Volley Library on SDK 23 and higher
     useLibrary 'org.apache.http.legacy'
+
+    lintOptions {
+        htmlReport false
+        abortOnError false
+    }
 }
 
 dependencies {
