@@ -25,18 +25,18 @@ android {
 }
 
 dependencies {
-    compile("com.android.support:support-compat:$rootProject.ext.supportLib4")
-    compile("com.android.support:support-core-utils:$rootProject.ext.supportLib4")
-    compile("com.android.support:support-core-ui:$rootProject.ext.supportLib4")
-    compile("com.android.support:support-media-compat:$rootProject.ext.supportLib4")
-    compile("com.android.support:appcompat-v7:$rootProject.ext.supportLib7") {
+    implementation("com.android.support:support-compat:$rootProject.ext.supportLib4")
+    implementation("com.android.support:support-core-utils:$rootProject.ext.supportLib4")
+    implementation("com.android.support:support-core-ui:$rootProject.ext.supportLib4")
+    implementation("com.android.support:support-media-compat:$rootProject.ext.supportLib4")
+    implementation("com.android.support:appcompat-v7:$rootProject.ext.supportLib7") {
         exclude module: 'support-v4'
     }
 
 
 
-    compile("com.google.code.gson:gson:$rootProject.ext.gson")
-    compile("de.greenrobot:eventbus:$rootProject.ext.eventBus")
-    compile("com.nineoldandroids:library:$rootProject.ext.nineOld")
-    compile("com.android.volley:volley:$rootProject.ext.volley")
+    implementation("com.google.code.gson:gson:$rootProject.ext.gson")
+    implementation("de.greenrobot:eventbus:$rootProject.ext.eventBus")
+    implementation("com.nineoldandroids:library:$rootProject.ext.nineOld")
+    implementation("com.android.volley:volley:$rootProject.ext.volley")
 }
